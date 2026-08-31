@@ -21,7 +21,7 @@ body {
     padding: 20px 10px;
 }
 
-/* 🔥 右上角社群 ICON */
+/* 右上角社群 ICON */
 .top-icons {
     position: fixed;
     top: 15px;
@@ -101,7 +101,7 @@ h1 {
     margin-bottom: 8px;
 }
 
-/* 多行輸入/輸出框美化 */
+/* 多行輸入框美化 */
 textarea {
     width: 100%;
     padding: 14px;
@@ -149,9 +149,40 @@ textarea:focus {
     transform: translateY(1px);
 }
 
-/* 輸出結果區塊 */
+/* 輸出結果區塊美化 */
 .output {
     margin-top: 22px;
+}
+
+.result-list {
+    min-height: 120px;
+    max-height: 240px;
+    overflow-y: auto;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.result-item {
+    margin-bottom: 10px;
+    word-break: break-all;
+}
+
+.result-item a {
+    color: #ee4d2d;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.result-item a:hover {
+    color: #ff5722;
+}
+
+.placeholder-text {
+    color: #a0aec0;
 }
 
 .copy-btn {
@@ -172,11 +203,11 @@ textarea:focus {
     background: #1a202c;
 }
 
-/* 社群分享按鈕 */
+/* 社群按鈕 */
 .share {
     display: flex;
     gap: 10px;
-    margin-top: 14px;
+    margin-top: 16px;
 }
 
 .share a {
@@ -202,10 +233,10 @@ textarea:focus {
 
 <body>
 
-<!-- 右上角社群連結 -->
+<!-- 右上角社群 ICON -->
 <div class="top-icons">
-    <a class="icon fb" href="https://facebook.com/YOUR_PAGE" target="_blank">f</a>
-    <a class="icon line" href="https://line.me/ti/g/YOUR_GROUP_LINK" target="_blank">L</a>
+    <a class="icon fb" href="https://facebook.com/YOUR_FB_LINK" target="_blank">f</a>
+    <a class="icon line" href="https://line.me/ti/g/YOUR_LINE_LINK" target="_blank">L</a>
 </div>
 
 <div class="card">
@@ -228,23 +259,29 @@ textarea:focus {
     </button>
 
     <div class="output">
-        <span class="section-label">🔗 轉換後的專屬連結：</span>
-        <textarea id="resultBox" rows="5" readonly placeholder="轉換完成的連結會整齊排列顯示於此..."></textarea>
+        <span class="section-label">🔗 轉換後的專屬連結（可直接點擊跳轉）：</span>
+        
+        <!-- 可點擊超連結顯示區塊 -->
+        <div id="resultBox" class="result-list">
+            <span class="placeholder-text">轉換完成的連結會顯示於此，點擊即可開新視窗...</span>
+        </div>
 
         <button class="copy-btn" onclick="copyLink()">
-            📋 複製全部結果
+            📋 複製純連結 (自動去除序號)
         </button>
     </div>
 
-    <div class="share" id="share" style="display:none;">
-        <a id="lineShare" class="line-btn" target="_blank">LINE 分享</a>
-        <a id="fbShare" class="fb-btn" target="_blank">FB 分享</a>
+    <!-- 社群按鈕 -->
+    <div class="share" id="share">
+        <a href="https://line.me/ti/g/YOUR_LINE_LINK" class="line-btn" target="_blank">💬 加入 LINE 社群</a>
+        <a href="https://facebook.com/YOUR_FB_LINK" class="fb-btn" target="_blank">👍 追蹤 FB 社團/粉專</a>
     </div>
 
 </div>
 
 <script>
-let currentResults = "";
+// 儲存純網址陣列 (不含序號)
+let pureLinks = [];
 
 async function convertSingleUrl(url) {
     try {
@@ -268,12 +305,11 @@ async function convert() {
     const rawInput = document.getElementById("urlInput").value;
     const button = document.getElementById("convertBtn");
 
-    // 過濾並取得包含 shopee 的有效網址，並自動去除問號 ? 後面的追蹤參數
     const urls = rawInput
         .split("\n")
         .map(u => u.trim())
         .filter(u => u.length > 0 && u.includes("shopee"))
-        .map(u => u.split("?")[0]); // 🔥 關鍵修復：自動去除參數
+        .map(u => u.split("?")[0]);
 
     if (urls.length === 0) {
         alert("請輸入至少一個有效的 Shopee 商品連結！");
@@ -281,23 +317,31 @@ async function convert() {
     }
 
     button.innerText = `⏳ 轉換中 (0/${urls.length})...`;
+    pureLinks = [];
 
     try {
-        const fetchPromises = urls.map(async (url, index) => {
-            const link = await convertSingleUrl(url);
-            button.innerText = `⏳ 轉換中 (${index + 1}/${urls.length})...`;
-            return link ? `${index + 1}. ${link}` : `${index + 1}. [轉換失敗] ${url}`;
+        const fetchPromises = urls.map(async (url) => {
+            return await convertSingleUrl(url);
         });
 
         const results = await Promise.all(fetchPromises);
         
-        currentResults = results.join("\n\n");
-        document.getElementById("resultBox").value = currentResults;
+        const resultBox = document.getElementById("resultBox");
+        resultBox.innerHTML = ""; // 清空內容
 
-        const encodedShare = encodeURIComponent(currentResults);
-        document.getElementById("lineShare").href = `https://social-plugins.line.me/lineit/share?url=${encodedShare}`;
-        document.getElementById("fbShare").href = `https://www.facebook.com/sharer/sharer.php?u=${encodedShare}`;
-        document.getElementById("share").style.display = "flex";
+        results.forEach((link, index) => {
+            const item = document.createElement("div");
+            item.className = "result-item";
+            
+            if (link) {
+                pureLinks.push(link);
+                // 畫面上顯示序號與「可點擊超連結」
+                item.innerHTML = `<strong>${index + 1}.</strong> <a href="${link}" target="_blank" rel="noopener noreferrer">${link}</a>`;
+            } else {
+                item.innerHTML = `<strong>${index + 1}.</strong> <span style="color:red;">[轉換失敗] ${urls[index]}</span>`;
+            }
+            resultBox.appendChild(item);
+        });
 
     } catch (err) {
         alert("轉換時發生錯誤，請重試！");
@@ -307,9 +351,15 @@ async function convert() {
 }
 
 function copyLink() {
-    if (!currentResults) return;
-    navigator.clipboard.writeText(currentResults);
-    alert("已複製所有專屬連結！");
+    if (pureLinks.length === 0) {
+        alert("目前沒有可複製的有效連結！");
+        return;
+    }
+    
+    // 將純網址用換行組合 (完全去除數字序號)
+    const textToCopy = pureLinks.join("\n");
+    navigator.clipboard.writeText(textToCopy);
+    alert("已複製所有純連結 (不含數字序號)！");
 }
 </script>
 
