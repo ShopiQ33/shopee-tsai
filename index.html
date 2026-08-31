@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopee 連結轉換工具</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Noto Sans TC", Arial;
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* 🔥 右上角社群 ICON */
+.top-icons {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+    z-index: 999;
+}
+
+.icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: 0.2s;
+}
+
+.icon:hover {
+    transform: scale(1.1);
+}
+
+.fb {
+    background: #1877f2;
+}
+
+.line {
+    background: #06c755;
+}
+
+/* 卡片 */
+.card {
+    width: 92%;
+    max-width: 520px;
+    background: white;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* 🔥 頭像 */
+.avatar-wrap{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.avatar{
+    width:120px;
+    height:120px;
+    object-fit:cover;
+    border-radius:50%;
+    border:4px solid #fff;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.sub {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #ee4d2d;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:hover {
+    background: #d93d22;
+}
+
+.output {
+    margin-top: 16px;
+}
+
+label {
+    font-size: 13px;
+    color: #555;
+}
+
+textarea {
+    margin-top: 6px;
+    resize: none;
+    background: #f9f9f9;
+}
+
+.copy-btn {
+    margin-top: 8px;
+    background: #333;
+}
+
+.share {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.share a {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.line-btn { 
+    background: #06c755; 
+}
+
+.fb-btn { 
+    background: #1877f2; 
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔥 右上角社群 -->
+<div class="top-icons">
+
+    <!-- 改成你的 FB -->
+    <a class="icon fb" href="https://facebook.com/YOUR_PAGE" target="_blank">f</a>
+
+    <!-- 改成你的 LINE 群組 -->
+    <a class="icon line" href="https://line.me/ti/g/YOUR_GROUP_LINK" target="_blank">L</a>
+</div>
+
+<div class="card">
+
+    <!-- 🔥 你的圖片 -->
+    <div class="avatar-wrap">
+        <img src="avatar.jpg" class="avatar">
+    </div>
+
+    <h1>蝦皮推廣連結轉換</h1>
+
+    <div class="sub">
+        快速轉換連結，一鍵套用專屬優惠券
+    </div>
+
+    <input id="url" placeholder="貼上 Shopee 商品連結">
+
+    <button onclick="convert()" id="convertBtn">
+        轉換連結
+    </button>
+
+    <div class="output">
+        <label>🔗 你的專屬推廣連結：</label>
+
+        <textarea id="resultBox" rows="4" readonly></textarea>
+
+        <button class="copy-btn" onclick="copyLink()">
+            📋 複製連結
+        </button>
+    </div>
+
+    <div class="share" id="share" style="display:none;">
+        <a id="lineShare" class="line-btn" target="_blank">
+            LINE 分享
+        </a>
+
+        <a id="fbShare" class="fb-btn" target="_blank">
+            FB 分享
+        </a>
+    </div>
+
+</div>
+
+<script>
+let currentLink = "";
+
+async function convert() {
+
+    const url = document.getElementById("url").value;
+    const button = document.getElementById("convertBtn");
+
+    if (!url.includes("shopee")) {
+        alert("請輸入 Shopee 連結");
+        return;
+    }
+
+    button.innerText = "轉換中...";
+
+    try {
+
+        const res = await fetch("https://shopee-backend-xxgk.onrender.com/convert", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ url })
+        });
+
+        if (!res.ok) {
+            throw new Error("API Error");
+        }
+
+        const data = await res.json();
+
+        currentLink = data.affiliate_url;
+
+        document.getElementById("resultBox").value = currentLink;
+
+        const line =
+            `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(currentLink)}`;
+
+        const fb =
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentLink)}`;
+
+        document.getElementById("share").style.display = "flex";
+
+        document.getElementById("lineShare").href = line;
+        document.getElementById("fbShare").href = fb;
+
+    } catch (err) {
+
+        alert("轉換失敗，請稍後再試");
+
+    } finally {
+
+        button.innerText = "轉換連結";
+    }
+}
+
+function copyLink() {
+
+    if (!currentLink) return;
+
+    navigator.clipboard.writeText(currentLink);
+
+    alert("已複製連結！");
+}
+</script>
+
+</body>
+</html>
