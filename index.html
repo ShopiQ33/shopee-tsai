@@ -268,11 +268,12 @@ async function convert() {
     const rawInput = document.getElementById("urlInput").value;
     const button = document.getElementById("convertBtn");
 
-    // 過濾並取得包含 shopee 的有效網址
+    // 過濾並取得包含 shopee 的有效網址，並自動去除問號 ? 後面的追蹤參數
     const urls = rawInput
         .split("\n")
         .map(u => u.trim())
-        .filter(u => u.length > 0 && u.includes("shopee"));
+        .filter(u => u.length > 0 && u.includes("shopee"))
+        .map(u => u.split("?")[0]); // 🔥 關鍵修復：自動去除參數
 
     if (urls.length === 0) {
         alert("請輸入至少一個有效的 Shopee 商品連結！");
