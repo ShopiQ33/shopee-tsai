@@ -253,7 +253,7 @@ textarea:focus {
     </div>
 
     <span class="section-label">📥 貼上蝦皮商品連結：</span>
-    <textarea id="urlInput" rows="4" placeholder="請將蝦皮連結貼在這裡...&#10;例：&#10;https://shopee.tw/product/123/456&#10;https://shopee.tw/product/789/012"></textarea>
+    <textarea id="urlInput" rows="4" placeholder="請將蝦皮連結貼在這裡...&#10;例：&#10;https://tw.shp.ee/B1LMXc93&#10;https://shopee.tw/product/789/012"></textarea>
 
     <button onclick="convert()" id="convertBtn" class="main-btn">
         🚀 立即轉換連結
@@ -304,11 +304,11 @@ async function convert() {
     const rawInput = document.getElementById("urlInput").value;
     const button = document.getElementById("convertBtn");
 
+    // 已修正：同時支援 shopee 網址與 tw.shp.ee 短網址過濾
     const urls = rawInput
         .split("\n")
         .map(u => u.trim())
-        .filter(u => u.length > 0 && u.includes("shopee"))
-        .map(u => u.split("?")[0]);
+        .filter(u => u.length > 0 && (u.includes("shopee") || u.includes("shp.ee")));
 
     if (urls.length === 0) {
         alert("請輸入至少一個有效的 Shopee 商品連結！");
