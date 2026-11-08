@@ -1,9 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蝦皮專屬連結批量轉換器</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px 10px;
+}
+
+.top-icons {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+    z-index: 999;
+}
+
+.icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+}
+
+.icon:hover {
+    transform: scale(1.1);
+}
+
+.fb { background: #1877f2; }
+.line { background: #06c755; }
+
+.card {
+    width: 100%;
+    max-width: 520px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.avatar-wrap {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #ffffff;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+h1 {
+    text-align: center;
+    margin: 0 0 6px 0;
+    font-size: 22px;
+    color: #333333;
+}
+
+.sub {
+    text-align: center;
+    color: #777777;
+    font-size: 13px;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.section-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444444;
+    margin-bottom: 8px;
+}
+
+textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1.5px solid #e2e8f0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #f8fafc;
+    outline: none;
+    resize: vertical;
+    transition: all 0.25s ease;
+    font-family: inherit;
+}
+
+textarea:focus {
+    background-color: #ffffff;
+    border-color: #ee4d2d;
+    box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.15);
+}
+
+.main-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ff5722, #ee4d2d);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(238, 77, 45, 0.3);
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.main-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(238, 77, 45, 0.4);
+}
+
+.main-btn:active {
+    transform: translateY(1px);
+}
+
+.main-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.output {
+    margin-top: 22px;
+}
+
+.result-list {
+    min-height: 120px;
+    max-height: 300px;
+    overflow-y: auto;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.result-item {
+    margin-bottom: 10px;
+    word-break: break-all;
+}
+
+.result-item a {
+    color: #ee4d2d;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.result-item a:hover {
+    color: #ff5722;
+}
+
+.placeholder-text {
+    color: #a0aec0;
+}
+
+.clear-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #718096;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.clear-btn:hover {
+    background: #4a5568;
+}
+
+.share {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.share a {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 10px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+}
+
+.share a:hover {
+    opacity: 0.9;
+}
+
+.line-btn { background: #06c755; }
+.fb-btn { background: #1877f2; }
+
+.backend-status {
+    text-align: center;
+    font-size: 12px;
+    margin: -8px 0 14px;
+    color: #718096;
+}
+
+.error-detail {
+    color: #c53030;
+    font-size: 12px;
+    margin-top: 4px;
+    word-break: break-word;
+}
+
+.success-summary {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-icons">
+    <a class="icon fb" href="https://www.facebook.com/share/1K6men2rjE/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">f</a>
+    <a class="icon line" href="https://reurl.cc/vGgQ31" target="_blank" rel="noopener noreferrer">L</a>
+</div>
+
+<div class="card">
+
+    <div class="avatar-wrap">
+        <img src="avatar.jpg" class="avatar" alt="Avatar">
+    </div>
+
+    <h1>蝦皮推廣連結轉換器</h1>
+
+    <div class="sub">
+        支援一次貼上多個商品連結（請一行貼一個）<br>
+        一鍵轉換成專屬優惠推廣連結
+    </div>
+
+    <div id="backendStatus" class="backend-status">
+        ⏳ 正在確認伺服器狀態...
+    </div>
+
+    <span class="section-label">📥 貼上蝦皮商品連結：</span>
+
+    <textarea id="urlInput" rows="4" placeholder="請將蝦皮連結貼在這裡...&#10;例：&#10;https://tw.shp.ee/B1LMXc93&#10;https://shopee.tw/product/789/012"></textarea>
+
+    <button onclick="convert()" id="convertBtn" class="main-btn">
+        🚀 立即轉換連結
+    </button>
+
+    <div class="output">
+        <span class="section-label">🔗 轉換後的專屬連結（可直接點擊跳轉）：</span>
+
+        <div id="resultBox" class="result-list">
+            <span class="placeholder-text">轉換完成的連結會顯示於此，點擊即可開新視窗...</span>
+        </div>
+
+        <button class="clear-btn" onclick="clearAll()">
+            🗑️ 清空所有內容
+        </button>
+    </div>
+
+    <div class="share" id="share">
+        <a href="https://reurl.cc/vGgQ31" class="line-btn" target="_blank" rel="noopener noreferrer">💬 加入 LINE 社群</a>
+        <a href="https://www.facebook.com/share/1K6men2rjE/?mibextid=wwXIfr" class="fb-btn" target="_blank" rel="noopener noreferrer">👍 追蹤 FB 社團/粉專</a>
+    </div>
+
+</div>
+
 <script>
 const BACKEND_URL = "https://shopee-backend-xxgk.onrender.com";
+
+// 更新後端狀態文字
+function setBackendStatus(message, color) {
+    const status = document.getElementById("backendStatus");
+
+    if (status) {
+        status.textContent = message;
+        status.style.color = color || "#718096";
+    }
+}
+
+// 錯誤代碼轉換成客戶看得懂的訊息
+function getErrorMessage(code, fallback) {
+    const messages = {
+        INVALID_URL: "商品連結格式不正確，請檢查網址。",
+        SHOPEE_TIMEOUT: "蝦皮 API 回應逾時，請稍後再試。",
+        SHOPEE_CONNECTION_ERROR: "目前無法連接蝦皮 API。",
+        SHOPEE_AUTH_ERROR: "蝦皮 API 認證異常，請聯絡管理者。",
+        SHOPEE_API_ERROR: "蝦皮 API 回應異常，請稍後再試。",
+        SHOPEE_INVALID_RESPONSE: "蝦皮 API 回傳資料格式異常。",
+        SHOPEE_EMPTY_RESULT: "蝦皮 API 沒有產生短連結。",
+        BACKEND_ERROR: "伺服器內部發生錯誤，請聯絡管理者。",
+        MISSING_CONFIG: "伺服器設定不完整，請聯絡管理者。",
+        INVALID_JSON: "請求資料格式錯誤。",
+        NOT_FOUND: "找不到指定的 API 路徑。"
+    };
+
+    return messages[code] || fallback || "發生未知錯誤，請稍後再試。";
+}
 
 // 喚醒並確認 Render 後端
 async function wakeBackend() {
     console.log("正在確認 Shopee Backend 狀態...");
+    setBackendStatus("⏳ 正在連接伺服器，首次啟動可能需要等待...", "#b7791f");
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 120000);
@@ -16,20 +350,32 @@ async function wakeBackend() {
         });
 
         if (!response.ok) {
-            throw new Error("後端回應錯誤：" + response.status);
+            throw new Error("HTTP_" + response.status);
         }
 
         const data = await response.json();
 
         if (data.status !== "ok") {
-            throw new Error("後端尚未正常啟動");
+            throw new Error("BACKEND_NOT_READY");
         }
 
         console.log("Shopee Backend 已正常啟動！");
+        setBackendStatus("🟢 伺服器已連線，可以開始轉換", "#276749");
+
         return true;
 
     } catch (error) {
-        console.error("後端連線失敗：", error);
+        console.error("後端連線診斷：", error);
+
+        let message = "🔴 後端連線失敗，請稍後重新整理網頁";
+
+        if (error.name === "AbortError") {
+            message = "🔴 後端啟動逾時，請稍後重新嘗試";
+        } else if (error.message.startsWith("HTTP_")) {
+            message = "🔴 後端回應異常：" + error.message;
+        }
+
+        setBackendStatus(message, "#c53030");
         return false;
 
     } finally {
@@ -53,18 +399,60 @@ async function convertSingleUrl(url) {
             body: JSON.stringify({ url })
         });
 
-        const data = await response.json();
+        let data;
 
-        if (!response.ok) {
-            console.error("蝦皮轉換失敗：", data);
-            return null;
+        try {
+            data = await response.json();
+        } catch {
+            return {
+                success: false,
+                code: "INVALID_RESPONSE",
+                message: "伺服器回傳的資料無法讀取",
+                status: response.status
+            };
         }
 
-        return data.affiliate_url || null;
+        if (!response.ok || data.success === false) {
+            const code = data.error_code || "BACKEND_ERROR";
+
+            console.error("轉換失敗診斷：", {
+                httpStatus: response.status,
+                errorCode: code,
+                message: data.error,
+                requestId: data.request_id,
+                upstreamStatus: data.upstream_status
+            });
+
+            return {
+                success: false,
+                code: code,
+                message: getErrorMessage(code, data.error),
+                requestId: data.request_id,
+                status: response.status
+            };
+        }
+
+        if (!data.affiliate_url) {
+            return {
+                success: false,
+                code: "EMPTY_RESULT",
+                message: "伺服器沒有回傳轉換後的連結"
+            };
+        }
+
+        return {
+            success: true,
+            link: data.affiliate_url
+        };
 
     } catch (error) {
-        console.error("轉換連線錯誤：", error);
-        return null;
+        console.error("單筆轉換連線錯誤：", error);
+
+        return {
+            success: false,
+            code: "NETWORK_ERROR",
+            message: "無法連接轉換伺服器，請檢查網路或稍後重試"
+        };
     }
 }
 
@@ -94,75 +482,102 @@ async function convert() {
         '<span class="placeholder-text">正在連接 Shopee Backend，第一次啟動可能需要等待，請不要關閉網頁...</span>';
 
     try {
-        // 先確認後端已經啟動
+        // 先確認後端是否正常
         const ready = await wakeBackend();
 
         if (!ready) {
-            resultBox.innerHTML =
-                '<span style="color:red;">後端連線失敗，請稍後重新嘗試。</span>';
+            resultBox.innerHTML = "";
+
+            const error = document.createElement("div");
+            error.style.color = "#c53030";
+            error.textContent =
+                "❌ 後端喚醒或連線失敗，尚未開始轉換。請稍後再試。";
+
+            resultBox.appendChild(error);
             return;
         }
 
-        button.innerText = `⏳ 正在轉換 (0/${urls.length})...`;
-
         const results = [];
 
-        // 逐筆轉換，避免一次發送太多請求
+        // 逐筆轉換
         for (let i = 0; i < urls.length; i++) {
             button.innerText =
                 `⏳ 正在轉換 (${i + 1}/${urls.length})...`;
 
-            const link = await convertSingleUrl(urls[i]);
-            results.push(link);
+            const result = await convertSingleUrl(urls[i]);
+            results.push(result);
         }
 
         resultBox.innerHTML = "";
 
         let successCount = 0;
+        let failCount = 0;
 
-        results.forEach((link, index) => {
+        results.forEach((result, index) => {
             const item = document.createElement("div");
             item.className = "result-item";
 
-            if (link) {
+            const number = document.createElement("strong");
+            number.textContent = (index + 1) + ". ";
+            item.appendChild(number);
+
+            if (result.success) {
                 successCount++;
 
-                const number = document.createElement("strong");
-                number.textContent = (index + 1) + ". ";
-
                 const anchor = document.createElement("a");
-                anchor.href = link;
+                anchor.href = result.link;
                 anchor.target = "_blank";
                 anchor.rel = "noopener noreferrer";
-                anchor.textContent = link;
+                anchor.textContent = result.link;
 
-                item.appendChild(number);
                 item.appendChild(anchor);
 
             } else {
-                const errorText = document.createElement("span");
-                errorText.style.color = "red";
-                errorText.textContent =
-                    "[轉換失敗] " + urls[index];
+                failCount++;
 
-                item.textContent = (index + 1) + ". ";
+                const errorText = document.createElement("div");
+                errorText.style.color = "#c53030";
+                errorText.textContent =
+                    "❌ " + result.message;
+
                 item.appendChild(errorText);
+
+                const detail = document.createElement("div");
+                detail.className = "error-detail";
+
+                detail.textContent =
+                    "錯誤代碼：" + result.code +
+                    (result.status ? "｜HTTP：" + result.status : "") +
+                    (result.requestId ? "｜診斷編號：" + result.requestId : "");
+
+                item.appendChild(detail);
+
+                console.error("第 " + (index + 1) + " 筆失敗：", result);
             }
 
             resultBox.appendChild(item);
         });
 
         const summary = document.createElement("div");
-        summary.style.marginTop = "12px";
-        summary.style.fontWeight = "bold";
+        summary.className = "success-summary";
+        summary.style.color = failCount > 0 ? "#c53030" : "#276749";
+
         summary.textContent =
-            `轉換完成：成功 ${successCount} 筆，失敗 ${urls.length - successCount} 筆`;
+            `轉換完成：成功 ${successCount} 筆，失敗 ${failCount} 筆`;
 
         resultBox.appendChild(summary);
 
+        if (failCount === 0) {
+            setBackendStatus("🟢 伺服器正常，全部轉換成功", "#276749");
+        } else {
+            setBackendStatus("🟡 轉換完成，但有部分連結失敗", "#b7791f");
+        }
+
     } catch (error) {
         console.error("批量轉換錯誤：", error);
-        alert("轉換時發生錯誤，請重新嘗試！");
+
+        resultBox.textContent =
+            "❌ 批量轉換發生未預期錯誤，請查看瀏覽器 Console。";
 
     } finally {
         button.disabled = false;
@@ -178,3 +593,6 @@ function clearAll() {
         '<span class="placeholder-text">轉換完成的連結會顯示於此，點擊即可開新視窗...</span>';
 }
 </script>
+
+</body>
+</html>
