@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -5,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#fff3eb">
 <title>雙平台推廣連結轉換器</title>
+
 <style>
 :root {
   --accent: #ee4d2d;
@@ -15,10 +17,16 @@
   --muted: #817873;
   --line: #eee7e2;
 }
+
 * { box-sizing: border-box; }
+
 body {
-  margin: 0; min-height: 100vh; padding: 76px 14px 28px;
-  display: flex; justify-content: center; align-items: flex-start;
+  margin: 0;
+  min-height: 100vh;
+  padding: 76px 14px 28px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", Arial, sans-serif;
   color: var(--ink);
   background:
@@ -26,202 +34,682 @@ body {
     radial-gradient(circle at 90% 85%, rgba(255,255,255,.55), transparent 25%),
     linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
 }
+
 .top-icons {
-  position: fixed; top: 15px; right: 16px; display: flex; gap: 9px; z-index: 10;
+  position: fixed;
+  top: 15px;
+  right: 16px;
+  display: flex;
+  gap: 9px;
+  z-index: 10;
 }
+
 .icon {
-  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
-  color: #fff; text-decoration: none; font-size: 18px; font-weight: 800;
-  box-shadow: 0 4px 12px rgba(0,0,0,.16); transition: transform .2s;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(0,0,0,.16);
+  transition: transform .2s;
 }
-.icon:hover { transform: translateY(-2px) scale(1.05); }
-.fb { background: #1877f2; } .line { background: #06c755; }
+
+.icon:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.fb { background: #1877f2; }
+.line { background: #06c755; }
+
 .card {
-  width: 100%; max-width: 620px; padding: 29px;
-  background: rgba(255,255,255,.97); border: 1px solid rgba(255,255,255,.8);
-  border-radius: 25px; box-shadow: 0 20px 55px rgba(100,52,30,.16);
+  width: 100%;
+  max-width: 620px;
+  padding: 29px;
+  background: rgba(255,255,255,.97);
+  border: 1px solid rgba(255,255,255,.8);
+  border-radius: 25px;
+  box-shadow: 0 20px 55px rgba(100,52,30,.16);
 }
-.brand { text-align: center; margin-bottom: 20px; }
+
+.brand {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 .avatar {
-  width: 88px; height: 88px; object-fit: cover; border-radius: 50%;
-  border: 4px solid #fff; box-shadow: 0 6px 18px rgba(0,0,0,.13); margin-bottom: 12px;
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,.13);
+  margin-bottom: 12px;
 }
-h1 { margin: 0 0 7px; font-size: 25px; letter-spacing: .3px; }
-.sub { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+h1 {
+  margin: 0 0 7px;
+  font-size: 25px;
+  letter-spacing: .3px;
+}
+
+.sub {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
 .platforms {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 9px;
-  padding: 6px; margin: 22px 0 19px; border-radius: 15px;
-  background: #f6f3f0; border: 1px solid #eee8e3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  padding: 6px;
+  margin: 22px 0 19px;
+  border-radius: 15px;
+  background: #f6f3f0;
+  border: 1px solid #eee8e3;
 }
+
 .platform-tab {
-  border: 0; border-radius: 11px; padding: 12px 8px;
-  background: transparent; color: #77706b; font-size: 15px; font-weight: 800; cursor: pointer;
+  border: 0;
+  border-radius: 11px;
+  padding: 12px 8px;
+  background: transparent;
+  color: #77706b;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
   transition: .2s;
 }
-.platform-tab small { display: block; margin-top: 3px; font-size: 11px; font-weight: 500; }
-.platform-tab.active { color: white; }
+
+.platform-tab small {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.platform-tab.active {
+  color: white;
+}
+
 .platform-tab.active[data-platform="shopee"] {
-  background: linear-gradient(135deg,#ff794e,#ee4d2d); box-shadow: 0 5px 13px rgba(238,77,45,.25);
+  background: linear-gradient(135deg,#ff794e,#ee4d2d);
+  box-shadow: 0 5px 13px rgba(238,77,45,.25);
 }
+
 .platform-tab.active[data-platform="coupang"] {
-  background: linear-gradient(135deg,#5283e8,#2857bb); box-shadow: 0 5px 13px rgba(52,104,212,.25);
+  background: linear-gradient(135deg,#5283e8,#2857bb);
+  box-shadow: 0 5px 13px rgba(52,104,212,.25);
 }
+
 .backend-status {
-  display: flex; justify-content: center; align-items: center; gap: 8px;
-  margin: 0 0 20px; padding: 10px 12px; border-radius: 10px;
-  background: #faf8f6; color: #817873; font-size: 12px; text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 20px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #faf8f6;
+  color: #817873;
+  font-size: 12px;
+  text-align: center;
 }
-.status-dot { width: 7px; height: 7px; flex: none; border-radius: 50%; background: #d6a24a; }
-.backend-status.ok .status-dot { background: #16a36f; }
-.backend-status.bad .status-dot { background: #dc4545; }
-.section-head, .result-head {
-  display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 9px;
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #d6a24a;
 }
-.section-label { font-size: 14px; font-weight: 800; color: #48413d; }
-.hint { color: #aaa19b; font-size: 11px; }
+
+.backend-status.ok .status-dot {
+  background: #16a36f;
+}
+
+.backend-status.bad .status-dot {
+  background: #dc4545;
+}
+
+.section-head,
+.result-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 9px;
+}
+
+.section-label {
+  font-size: 14px;
+  font-weight: 800;
+  color: #48413d;
+}
+
+.hint {
+  color: #aaa19b;
+  font-size: 11px;
+}
+
 textarea {
-  display: block; width: 100%; min-height: 138px; padding: 14px 15px;
-  border: 1.5px solid #e5dfda; border-radius: 13px; outline: none;
-  background: #fcfbfa; color: #302b28; font: 14px/1.65 inherit;
-  resize: vertical; transition: .2s;
+  display: block;
+  width: 100%;
+  min-height: 138px;
+  padding: 14px 15px;
+  border: 1.5px solid #e5dfda;
+  border-radius: 13px;
+  outline: none;
+  background: #fcfbfa;
+  color: #302b28;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.65;
+  resize: vertical;
+  transition: .2s;
 }
+
 textarea:focus {
-  background: #fff; border-color: var(--accent);
+  background: #fff;
+  border-color: var(--accent);
   box-shadow: 0 0 0 4px var(--accent-soft);
 }
-textarea::placeholder { color: #b5aca6; }
-.actions { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 13px; }
-.main-btn, .clear-btn {
-  border: 0; border-radius: 12px; padding: 14px 18px;
-  font-size: 14px; font-weight: 800; cursor: pointer; transition: .2s;
+
+textarea::placeholder {
+  color: #b5aca6;
 }
+
+/* 酷澎短網址輔助區 */
+
+.coupang-helper {
+  display: none;
+  margin-top: 13px;
+  padding: 15px;
+  border: 1px solid #dbe5fb;
+  border-radius: 13px;
+  background: #f5f8ff;
+}
+
+.coupang-helper.show {
+  display: block;
+}
+
+.coupang-helper-title {
+  color: #2857bb;
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.coupang-helper-text {
+  color: #716b67;
+  font-size: 12px;
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+
+.coupang-short-item {
+  padding: 10px 0;
+  border-top: 1px solid #e2e9f7;
+  overflow-wrap: anywhere;
+}
+
+.coupang-short-label {
+  color: #77706b;
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.coupang-short-url {
+  display: block;
+  color: #2857bb;
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.coupang-open-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 13px;
+  color: white;
+  background: #3468d4;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.coupang-open-btn:hover {
+  background: #2857bb;
+}
+
+.coupang-helper-note {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #eaf0ff;
+  color: #36558e;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin-top: 13px;
+}
+
+.main-btn,
+.clear-btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: .2s;
+}
+
 .main-btn {
-  color: #fff; background: linear-gradient(135deg,var(--accent2),var(--accent));
+  color: #fff;
+  background: linear-gradient(135deg,var(--accent2),var(--accent));
   box-shadow: 0 6px 17px var(--accent-shadow);
 }
-.main-btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.03); }
-.main-btn:disabled { opacity: .6; cursor: not-allowed; }
-.clear-btn { color: #655d58; background: #f0eeec; }
-.clear-btn:hover { background: #e7e3df; }
-.progress-wrap { display: none; height: 5px; overflow: hidden; margin-top: 13px; border-radius: 99px; background: #f0ece8; }
-.progress-bar { width: 0; height: 100%; background: var(--accent); transition: width .2s; }
-.output { margin-top: 23px; }
+
+.main-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+}
+
+.main-btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.clear-btn {
+  color: #655d58;
+  background: #f0eeec;
+}
+
+.clear-btn:hover {
+  background: #e7e3df;
+}
+
+.progress-wrap {
+  display: none;
+  height: 5px;
+  overflow: hidden;
+  margin-top: 13px;
+  border-radius: 99px;
+  background: #f0ece8;
+}
+
+.progress-bar {
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+  transition: width .2s;
+}
+
+.output {
+  margin-top: 23px;
+}
+
 .result-list {
-  min-height: 105px; max-height: 340px; overflow-y: auto;
-  padding: 12px; border: 1px solid #eee8e3; border-radius: 13px; background: #fcfbfa;
+  min-height: 105px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 12px;
+  border: 1px solid #eee8e3;
+  border-radius: 13px;
+  background: #fcfbfa;
 }
+
 .placeholder-text {
-  display: grid; place-items: center; min-height: 78px;
-  color: #aaa19a; font-size: 13px; text-align: center;
+  display: grid;
+  place-items: center;
+  min-height: 78px;
+  color: #aaa19a;
+  font-size: 13px;
+  text-align: center;
 }
-.result-item { padding: 11px 8px; border-bottom: 1px solid #eee9e5; }
-.result-item:last-child { border-bottom: 0; }
-.result-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 5px; }
-.result-number { color: #817873; font-size: 12px; font-weight: 800; }
-.result-state { font-size: 11px; font-weight: 800; }
-.result-state.success { color: #0f9f6e; } .result-state.fail { color: #d64242; }
+
+.result-item {
+  padding: 11px 8px;
+  border-bottom: 1px solid #eee9e5;
+}
+
+.result-item:last-child {
+  border-bottom: 0;
+}
+
+.result-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.result-number {
+  color: #817873;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.result-state {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.result-state.success { color: #0f9f6e; }
+.result-state.fail { color: #d64242; }
+
 .result-link {
-  display: block; color: var(--accent); font-size: 13px; font-weight: 700;
-  line-height: 1.5; overflow-wrap: anywhere; text-decoration: none;
+  display: block;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  text-decoration: none;
 }
-.result-link:hover { text-decoration: underline; }
-.result-actions { display: flex; gap: 7px; margin-top: 7px; }
+
+.result-link:hover {
+  text-decoration: underline;
+}
+
+.result-actions {
+  display: flex;
+  gap: 7px;
+  margin-top: 7px;
+}
+
 .copy-btn {
-  padding: 6px 10px; border: 1px solid #e8e2dc; border-radius: 8px;
-  background: #fff; color: #655d58; font-size: 11px; font-weight: 700; cursor: pointer;
+  padding: 6px 10px;
+  border: 1px solid #e8e2dc;
+  border-radius: 8px;
+  background: #fff;
+  color: #655d58;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
 }
-.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
-.error-text { color: #c24141; font-size: 12px; line-height: 1.5; }
-.error-detail { margin-top: 4px; color: #a8a29e; font-size: 10px; overflow-wrap: anywhere; }
+
+.copy-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.error-text {
+  color: #c24141;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.error-detail {
+  margin-top: 4px;
+  color: #a8a29e;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
 .success-summary {
-  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-  margin-top: 8px; padding: 12px 8px 2px; border-top: 1px solid #eee9e5;
-  color: #57534e; font-size: 12px; font-weight: 800;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 12px 8px 2px;
+  border-top: 1px solid #eee9e5;
+  color: #57534e;
+  font-size: 12px;
+  font-weight: 800;
 }
-.success-summary .good { color: #0f9f6e; } .success-summary .bad { color: #d64242; }
-.share { display: flex; gap: 10px; margin-top: 19px; }
+
+.success-summary .good { color: #0f9f6e; }
+.success-summary .bad { color: #d64242; }
+
+.share {
+  display: flex;
+  gap: 10px;
+  margin-top: 19px;
+}
+
 .share a {
-  flex: 1; padding: 12px 8px; border-radius: 10px; color: #fff;
-  text-align: center; text-decoration: none; font-size: 12px; font-weight: 800; transition: .2s;
+  flex: 1;
+  padding: 12px 8px;
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+  transition: .2s;
 }
-.share a:hover { filter: brightness(.95); transform: translateY(-1px); }
-.line-btn { background: #06c755; } .fb-btn { background: #1877f2; }
-.footer { margin-top: 16px; color: #aaa19b; text-align: center; font-size: 10px; }
+
+.share a:hover {
+  filter: brightness(.95);
+  transform: translateY(-1px);
+}
+
+.line-btn { background: #06c755; }
+.fb-btn { background: #1877f2; }
+
+.footer {
+  margin-top: 16px;
+  color: #aaa19b;
+  text-align: center;
+  font-size: 10px;
+}
+
 @media (max-width:520px) {
-  body { padding: 68px 11px 20px; }
-  .card { padding: 22px 16px; border-radius: 21px; }
-  h1 { font-size: 22px; } .avatar { width: 78px; height: 78px; }
-  .icon { width: 36px; height: 36px; }
-  .actions { grid-template-columns: 1fr; }
-  .clear-btn { padding: 11px; }
+  body {
+    padding: 68px 11px 20px;
+  }
+
+  .card {
+    padding: 22px 16px;
+    border-radius: 21px;
+  }
+
+  h1 { font-size: 22px; }
+
+  .avatar {
+    width: 78px;
+    height: 78px;
+  }
+
+  .icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .clear-btn {
+    padding: 11px;
+  }
 }
 </style>
 </head>
+
 <body>
+
 <div class="top-icons">
-  <a class="icon fb" href="https://www.facebook.com/profile.php?id=61596487799596" rel="noopener noreferrer" aria-label="Facebook">f</a>
-  <a class="icon line" href="https://reurl.cc/vGgQ31" target="_blank" rel="noopener noreferrer" aria-label="LINE">L</a>
+  <a class="icon fb"
+     href="https://www.facebook.com/profile.php?id=61596487799596"
+     rel="noopener noreferrer"
+     aria-label="Facebook">f</a>
+
+  <a class="icon line"
+     href="https://reurl.cc/vGgQ31"
+     target="_blank"
+     rel="noopener noreferrer"
+     aria-label="LINE">L</a>
 </div>
 
 <main class="card">
+
   <header class="brand">
-    <div><img src="avatar.jpg" class="avatar" alt="網站頭像" onerror="this.style.display='none'"></div>
+    <div>
+      <img src="avatar.jpg"
+           class="avatar"
+           alt="網站頭像"
+           onerror="this.style.display='none'">
+    </div>
+
     <h1>雙平台推廣連結轉換器</h1>
-    <p class="sub">Shopee × Coupang｜一行貼上一個商品網址<br>快速轉換成你的專屬推廣連結</p>
+
+    <p class="sub">
+      Shopee × Coupang｜一行貼上一個商品網址<br>
+      快速轉換成你的專屬推廣連結
+    </p>
   </header>
 
   <nav class="platforms" aria-label="選擇轉換平台">
-    <button class="platform-tab active" type="button" data-platform="shopee" onclick="switchPlatform('shopee')">
-      🛍️ 蝦皮 Shopee<small>Shopee Affiliate</small>
+
+    <button class="platform-tab active"
+            type="button"
+            data-platform="shopee"
+            onclick="switchPlatform('shopee')">
+      🛍️ 蝦皮 Shopee
+      <small>Shopee Affiliate</small>
     </button>
-    <button class="platform-tab" type="button" data-platform="coupang" onclick="switchPlatform('coupang')">
-      🔵 酷澎 Coupang<small>Coupang Partners</small>
+
+    <button class="platform-tab"
+            type="button"
+            data-platform="coupang"
+            onclick="switchPlatform('coupang')">
+      🔵 酷澎 Coupang
+      <small>Coupang Partners</small>
     </button>
+
   </nav>
 
   <div id="backendStatus" class="backend-status">
-    <span class="status-dot"></span><span id="backendStatusText">⏳ 正在確認伺服器狀態...</span>
+    <span class="status-dot"></span>
+    <span id="backendStatusText">⏳ 正在確認伺服器狀態...</span>
   </div>
 
   <section>
+
     <div class="section-head">
-      <label class="section-label" for="urlInput" id="inputLabel">📥 貼上蝦皮商品連結：</label>
+      <label class="section-label" for="urlInput" id="inputLabel">
+        📥 貼上蝦皮商品連結：
+      </label>
+
       <span class="hint">每行一個網址</span>
     </div>
-    <textarea id="urlInput" rows="5" placeholder="請將蝦皮連結貼在這裡...
+
+    <textarea id="urlInput"
+              rows="5"
+              placeholder="請將蝦皮連結貼在這裡...
 例如：
 https://tw.shp.ee/B1LMXc93
 https://shopee.tw/product/789/012"></textarea>
-    <div class="actions">
-      <button id="convertBtn" class="main-btn" type="button" onclick="convert()">🚀 立即轉換連結</button>
-      <button class="clear-btn" type="button" onclick="clearAll()">🗑️ 清空內容</button>
+
+    <!-- 酷澎短網址輔助區 -->
+
+    <div id="coupangHelper" class="coupang-helper">
+
+      <div class="coupang-helper-title">
+        🔵 酷澎短網址展開工具
+      </div>
+
+      <div class="coupang-helper-text">
+        偵測到酷澎短網址。請點擊下方的「開啟酷澎商品頁」，
+        等待商品頁載入完成後，複製瀏覽器網址列中的完整網址，
+        再回到這裡貼上並重新轉換。
+      </div>
+
+      <div id="coupangShortList"></div>
+
+      <div class="coupang-helper-note">
+        💡 注意：請複製瀏覽器網址列的完整商品網址，
+        不要只複製 coupa.ng 短網址。
+      </div>
+
     </div>
-    <div class="progress-wrap" id="progressWrap"><div class="progress-bar" id="progressBar"></div></div>
+
+    <div class="actions">
+
+      <button id="convertBtn"
+              class="main-btn"
+              type="button"
+              onclick="convert()">
+        🚀 立即轉換連結
+      </button>
+
+      <button class="clear-btn"
+              type="button"
+              onclick="clearAll()">
+        🗑️ 清空內容
+      </button>
+
+    </div>
+
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
   </section>
 
   <section class="output">
+
     <div class="result-head">
       <span class="section-label">🔗 轉換結果</span>
       <span class="hint">點擊連結可開啟商品</span>
     </div>
+
     <div id="resultBox" class="result-list">
-      <div class="placeholder-text">轉換完成的專屬推廣連結會顯示在這裡</div>
+      <div class="placeholder-text">
+        轉換完成的專屬推廣連結會顯示在這裡
+      </div>
     </div>
+
   </section>
 
   <div class="share">
-    <a href="https://reurl.cc/vGgQ31" class="line-btn" target="_blank" rel="noopener noreferrer">💬 加入 LINE 社群</a>
-    <a href="https://www.facebook.com/share/1K6men2rjE/?mibextid=wwXIfr" class="fb-btn" target="_blank" rel="noopener noreferrer">👍 追蹤 FB 社團／粉專</a>
+
+    <a href="https://reurl.cc/vGgQ31"
+       class="line-btn"
+       target="_blank"
+       rel="noopener noreferrer">
+      💬 加入 LINE 社群
+    </a>
+
+    <a href="https://www.facebook.com/share/1K6men2rjE/?mibextid=wwXIfr"
+       class="fb-btn"
+       target="_blank"
+       rel="noopener noreferrer">
+      👍 追蹤 FB 社團／粉專
+    </a>
+
   </div>
-  <div class="footer">請確認轉換結果成功後，再複製分享推廣連結</div>
+
+  <div class="footer">
+    請確認轉換結果成功後，再複製分享推廣連結
+  </div>
+
 </main>
 
 <script>
 const BACKEND_URL = "https://shopee-backend-xxgk.onrender.com";
+
 let currentPlatform = "shopee";
 let isConverting = false;
 
 const platformConfig = {
+
   shopee: {
     endpoint: "/convert",
     label: "📥 貼上蝦皮商品連結：",
@@ -232,39 +720,191 @@ const platformConfig = {
     soft: "rgba(238,77,45,.12)",
     shadow: "rgba(238,77,45,.25)"
   },
+
   coupang: {
     endpoint: "/coupang/convert",
     label: "📥 貼上酷澎商品連結：",
-    placeholder: "請將 Coupang 商品連結貼在這裡...\n例如：\nhttps://www.coupang.com/vp/products/...\n每行貼上一個網址",
+    placeholder: "請將 Coupang 商品連結貼在這裡...\n例如：\nhttps://coupa.ng/crkvol\nhttps://www.tw.coupang.com/products/...\n每行貼上一個網址",
     button: "🔵 立即轉換酷澎連結",
     accent: "#3468d4",
     accent2: "#5283e8",
     soft: "rgba(52,104,212,.12)",
     shadow: "rgba(52,104,212,.25)"
   }
+
 };
 
+// ==================================
+// 1. 後端狀態
+// ==================================
+
 function setBackendStatus(message, state = "") {
+
   const box = document.getElementById("backendStatus");
+
   document.getElementById("backendStatusText").textContent = message;
+
   box.classList.remove("ok", "bad");
-  if (state) box.classList.add(state);
+
+  if (state) {
+    box.classList.add(state);
+  }
+
 }
+
+// ==================================
+// 2. 進度條
+// ==================================
 
 function setProgress(done, total) {
+
   const wrap = document.getElementById("progressWrap");
   const bar = document.getElementById("progressBar");
+
   wrap.style.display = total ? "block" : "none";
-  bar.style.width = total ? `${Math.round(done / total * 100)}%` : "0%";
+
+  bar.style.width = total
+    ? `${Math.round(done / total * 100)}%`
+    : "0%";
+
 }
 
+// ==================================
+// 3. 酷澎短網址判斷
+// ==================================
+
+function isCoupangShortUrl(rawUrl) {
+
+  try {
+
+    const url = new URL(rawUrl);
+
+    return (
+      url.protocol === "https:" &&
+      url.hostname.toLowerCase() === "coupa.ng"
+    );
+
+  } catch {
+    return false;
+  }
+
+}
+
+// ==================================
+// 4. 酷澎商品網址判斷
+// ==================================
+
+function isValidCoupangProductUrl(rawUrl) {
+
+  try {
+
+    const url = new URL(rawUrl);
+
+    const allowedDomains = [
+      "www.tw.coupang.com",
+      "tw.coupang.com"
+    ];
+
+    return (
+      url.protocol === "https:" &&
+      allowedDomains.includes(url.hostname.toLowerCase()) &&
+      !url.username &&
+      !url.password
+    );
+
+  } catch {
+    return false;
+  }
+
+}
+
+// ==================================
+// 5. 顯示酷澎短網址展開工具
+// ==================================
+
+function prepareCoupangShortLinks(shortUrls) {
+
+  const helper = document.getElementById("coupangHelper");
+  const list = document.getElementById("coupangShortList");
+
+  list.replaceChildren();
+
+  shortUrls.forEach((url, index) => {
+
+    const item = document.createElement("div");
+    item.className = "coupang-short-item";
+
+    const label = document.createElement("div");
+    label.className = "coupang-short-label";
+    label.textContent = `第 ${index + 1} 個短網址`;
+
+    const link = document.createElement("a");
+    link.className = "coupang-short-url";
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = url;
+
+    const open = document.createElement("a");
+    open.className = "coupang-open-btn";
+    open.href = url;
+    open.target = "_blank";
+    open.rel = "noopener noreferrer";
+    open.textContent = "↗ 開啟酷澎商品頁";
+
+    item.append(
+      label,
+      link,
+      document.createElement("br"),
+      open
+    );
+
+    list.appendChild(item);
+
+  });
+
+  helper.classList.add("show");
+
+  helper.scrollIntoView({
+    behavior: "smooth",
+    block: "nearest"
+  });
+
+}
+
+// ==================================
+// 6. 隱藏酷澎輔助區
+// ==================================
+
+function hideCoupangHelper() {
+
+  document.getElementById("coupangHelper").classList.remove("show");
+
+  document.getElementById("coupangShortList").replaceChildren();
+
+}
+
+// ==================================
+// 7. 切換平台
+// ==================================
+
 function switchPlatform(platform) {
+
   if (isConverting || !platformConfig[platform]) return;
+
   currentPlatform = platform;
+
+  hideCoupangHelper();
+
   const config = platformConfig[platform];
 
   document.querySelectorAll(".platform-tab").forEach(button => {
-    button.classList.toggle("active", button.dataset.platform === platform);
+
+    button.classList.toggle(
+      "active",
+      button.dataset.platform === platform
+    );
+
   });
 
   document.documentElement.style.setProperty("--accent", config.accent);
@@ -273,138 +913,292 @@ function switchPlatform(platform) {
   document.documentElement.style.setProperty("--accent-shadow", config.shadow);
 
   document.getElementById("inputLabel").textContent = config.label;
+
   document.getElementById("urlInput").placeholder = config.placeholder;
+
   document.getElementById("convertBtn").textContent = config.button;
+
   document.getElementById("resultBox").innerHTML =
     '<div class="placeholder-text">轉換完成的專屬推廣連結會顯示在這裡</div>';
+
   setProgress(0, 0);
+
 }
 
+// ==================================
+// 8. 喚醒後端
+// ==================================
+
 async function wakeBackend() {
+
   setBackendStatus("⏳ 正在連接轉換伺服器，首次啟動可能需要等待...");
+
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 120000);
+
+  const timeout = setTimeout(
+    () => controller.abort(),
+    120000
+  );
 
   try {
+
     const response = await fetch(BACKEND_URL + "/", {
       method: "GET",
       cache: "no-store",
       signal: controller.signal
     });
-    if (!response.ok) throw new Error("HTTP_" + response.status);
+
+    if (!response.ok) {
+      throw new Error("HTTP_" + response.status);
+    }
+
     const data = await response.json();
-    if (data.status !== "ok") throw new Error("BACKEND_NOT_READY");
+
+    if (data.status !== "ok") {
+      throw new Error("BACKEND_NOT_READY");
+    }
+
     setBackendStatus("🟢 伺服器已連線，可以開始轉換", "ok");
+
     return true;
+
   } catch (error) {
+
     console.error("後端連線診斷：", error);
+
     const message = error.name === "AbortError"
       ? "🔴 後端啟動逾時，請稍後重新嘗試"
       : "🔴 後端連線失敗：" + (error.message || "請稍後重試");
+
     setBackendStatus(message, "bad");
+
     return false;
+
   } finally {
+
     clearTimeout(timeout);
+
   }
+
 }
+
+// ==================================
+// 9. 網址有效性檢查
+// ==================================
 
 function isValidPlatformUrl(rawUrl, platform) {
+
   try {
+
     const url = new URL(rawUrl);
-    if (!["http:", "https:"].includes(url.protocol)) return false;
-    const host = url.hostname.toLowerCase();
-    if (platform === "shopee") {
-      return host.includes("shopee") || host === "shp.ee" || host.endsWith(".shp.ee");
+
+    if (!["http:", "https:"].includes(url.protocol)) {
+      return false;
     }
-    return host.includes("coupang") || host === "coupa.ng" || host.endsWith(".coupa.ng");
+
+    const host = url.hostname.toLowerCase();
+
+    if (platform === "shopee") {
+
+      // 蝦皮保留原本判斷方式
+      return (
+        host.includes("shopee") ||
+        host === "shp.ee" ||
+        host.endsWith(".shp.ee")
+      );
+
+    }
+
+    // 酷澎只接受已展開的台灣商品網址
+    return isValidCoupangProductUrl(rawUrl);
+
   } catch {
+
     return false;
+
   }
+
 }
+
+// ==================================
+// 10. 錯誤訊息
+// ==================================
 
 function friendlyError(code, fallback, platform) {
+
   const common = {
+
     INVALID_URL: "商品網址格式不正確，請檢查網址。",
+
+    INVALID_COUPANG_PRODUCT_URL:
+      "請先開啟酷澎短網址，並貼上已展開的台灣商品網址。",
+
     BACKEND_ERROR: "伺服器發生錯誤，請稍後再試。",
+
     MISSING_CONFIG: "伺服器設定不完整，請聯絡管理者。",
+
     INVALID_JSON: "送出的資料格式錯誤。",
+
     NOT_FOUND: "找不到指定的 API 路徑，請確認後端已部署對應功能。",
+
     INVALID_RESPONSE: "伺服器回傳資料無法讀取。",
+
     EMPTY_RESULT: "伺服器沒有回傳轉換後的連結。",
+
     NETWORK_ERROR: "無法連接轉換伺服器，請檢查網路或稍後重試。"
+
   };
+
   const shopee = {
+
     SHOPEE_TIMEOUT: "蝦皮 API 回應逾時，請稍後再試。",
+
     SHOPEE_CONNECTION_ERROR: "目前無法連接蝦皮 API。",
+
     SHOPEE_AUTH_ERROR: "蝦皮 API 認證異常，請聯絡管理者。",
+
     SHOPEE_API_ERROR: "蝦皮 API 回應異常，請稍後再試。",
+
     SHOPEE_INVALID_RESPONSE: "蝦皮 API 回傳資料格式異常。",
+
     SHOPEE_EMPTY_RESULT: "蝦皮 API 沒有產生短連結。"
+
   };
+
   const coupang = {
+
     COUPANG_TIMEOUT: "酷澎 API 回應逾時，請稍後再試。",
+
     COUPANG_CONNECTION_ERROR: "目前無法連接酷澎 API。",
+
     COUPANG_AUTH_ERROR: "酷澎 API 認證異常，請檢查後端金鑰設定。",
+
     COUPANG_API_ERROR: "酷澎 API 回應異常，請稍後再試。",
+
     COUPANG_INVALID_RESPONSE: "酷澎 API 回傳資料格式異常。",
-    COUPANG_EMPTY_RESULT: "酷澎 API 沒有產生推廣連結。"
+
+    COUPANG_EMPTY_RESULT: "酷澎 API 沒有產生推廣連結。",
+
+    COUPANG_CONFIG_MISSING: "酷澎 API 憑證尚未設定。",
+
+    COUPANG_BACKEND_ERROR: "酷澎後端發生內部錯誤。"
+
   };
-  const messages = { ...common, ...(platform === "shopee" ? shopee : coupang) };
+
+  const messages = {
+    ...common,
+    ...(platform === "shopee" ? shopee : coupang)
+  };
+
   return messages[code] || fallback || "發生未知錯誤，請稍後再試。";
+
 }
 
+// ==================================
+// 11. 單筆轉換
+// ==================================
+
 async function convertSingleUrl(url, platform) {
+
   const config = platformConfig[platform];
+
   try {
-    const response = await fetch(BACKEND_URL + config.endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url })
-    });
+
+    const response = await fetch(
+      BACKEND_URL + config.endpoint,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ url })
+      }
+    );
 
     let data;
+
     try {
+
       data = await response.json();
+
     } catch {
+
       return {
-        success: false, code: "INVALID_RESPONSE",
-        message: "伺服器回傳的資料無法讀取", status: response.status
+        success: false,
+        code: "INVALID_RESPONSE",
+        message: "伺服器回傳的資料無法讀取",
+        status: response.status
       };
+
     }
 
-    if (!response.ok || data.success === false || data.error) {
-      const code = data.error_code || data.code || "BACKEND_ERROR";
+    if (
+      !response.ok ||
+      data.success === false ||
+      data.error
+    ) {
+
+      const code =
+        data.error_code ||
+        data.code ||
+        "BACKEND_ERROR";
+
       return {
         success: false,
         code,
-        message: friendlyError(code, data.error || data.message, platform),
+        message: friendlyError(
+          code,
+          data.error || data.message,
+          platform
+        ),
         requestId: data.request_id,
         status: response.status
       };
+
     }
 
-    // 兩個平台目前共用 affiliate_url；同時兼容常見短連結欄位名稱。
-    const link = data.affiliate_url || data.shortLink || data.shortenUrl || data.shorten_url;
+    const link =
+      data.affiliate_url ||
+      data.shortLink ||
+      data.shortenUrl ||
+      data.shorten_url;
+
     if (!link) {
+
       return {
-        success: false, code: "EMPTY_RESULT",
+        success: false,
+        code: "EMPTY_RESULT",
         message: friendlyError("EMPTY_RESULT", "", platform),
         requestId: data.request_id
       };
+
     }
 
-    return { success: true, link };
+    return {
+      success: true,
+      link
+    };
+
   } catch (error) {
+
     console.error("單筆轉換連線錯誤：", error);
+
     return {
       success: false,
       code: "NETWORK_ERROR",
       message: friendlyError("NETWORK_ERROR", "", platform)
     };
+
   }
+
 }
 
+// ==================================
+// 12. 顯示轉換結果
+// ==================================
+
 function addResultItem(resultBox, result, index) {
+
   const item = document.createElement("div");
   item.className = "result-item";
 
@@ -416,13 +1210,21 @@ function addResultItem(resultBox, result, index) {
   number.textContent = `第 ${index + 1} 筆`;
 
   const state = document.createElement("span");
-  state.className = "result-state " + (result.success ? "success" : "fail");
-  state.textContent = result.success ? "✓ 轉換成功" : "✕ 轉換失敗";
+  state.className = "result-state " + (
+    result.success ? "success" : "fail"
+  );
+
+  state.textContent = result.success
+    ? "✓ 轉換成功"
+    : "✕ 轉換失敗";
+
   top.append(number, state);
   item.appendChild(top);
 
   if (result.success) {
+
     const link = document.createElement("a");
+
     link.className = "result-link";
     link.href = result.link;
     link.target = "_blank";
@@ -431,151 +1233,356 @@ function addResultItem(resultBox, result, index) {
 
     const actions = document.createElement("div");
     actions.className = "result-actions";
+
     const copy = document.createElement("button");
+
     copy.className = "copy-btn";
     copy.type = "button";
     copy.textContent = "📋 複製推廣連結";
+
     copy.addEventListener("click", async () => {
+
       try {
+
         await navigator.clipboard.writeText(result.link);
+
         copy.textContent = "✓ 已複製";
-        setTimeout(() => copy.textContent = "📋 複製推廣連結", 1600);
+
+        setTimeout(() => {
+          copy.textContent = "📋 複製推廣連結";
+        }, 1600);
+
       } catch {
-        window.prompt("請手動複製以下連結：", result.link);
+
+        window.prompt(
+          "請手動複製以下連結：",
+          result.link
+        );
+
       }
+
     });
+
     actions.appendChild(copy);
+
     item.append(link, actions);
+
   } else {
+
     const error = document.createElement("div");
+
     error.className = "error-text";
     error.textContent = "❌ " + result.message;
+
     item.appendChild(error);
 
-    if (result.code || result.status || result.requestId) {
+    if (
+      result.code ||
+      result.status ||
+      result.requestId
+    ) {
+
       const detail = document.createElement("div");
+
       detail.className = "error-detail";
+
       detail.textContent =
         (result.code ? "錯誤代碼：" + result.code : "") +
         (result.status ? "｜HTTP：" + result.status : "") +
         (result.requestId ? "｜診斷編號：" + result.requestId : "");
+
       item.appendChild(detail);
+
     }
+
   }
+
   resultBox.appendChild(item);
+
 }
 
+// ==================================
+// 13. 批量轉換
+// ==================================
+
 async function convert() {
+
   if (isConverting) return;
+
   const input = document.getElementById("urlInput").value;
+
   const button = document.getElementById("convertBtn");
+
   const resultBox = document.getElementById("resultBox");
+
   const platform = currentPlatform;
 
-  const lines = input.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
-  const validUrls = lines.filter(url => isValidPlatformUrl(url, platform));
-  const invalidCount = lines.length - validUrls.length;
+  const lines = input
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(Boolean);
 
   if (lines.length === 0) {
+
     alert("請先貼上商品網址，每行一個。");
+
     return;
+
   }
+
+  // 酷澎短網址先交給前台展開工具處理
+  if (platform === "coupang") {
+
+    const shortUrls = lines.filter(isCoupangShortUrl);
+
+    if (shortUrls.length > 0) {
+
+      prepareCoupangShortLinks(shortUrls);
+
+      setBackendStatus(
+        "🟡 偵測到酷澎短網址，請先展開商品網址"
+      );
+
+      resultBox.replaceChildren();
+
+      const notice = document.createElement("div");
+
+      notice.className = "placeholder-text";
+
+      notice.textContent =
+        "請先開啟上方酷澎商品頁，複製完整商品網址後再進行轉換。";
+
+      resultBox.appendChild(notice);
+
+      return;
+
+    }
+
+    hideCoupangHelper();
+
+  }
+
+  const validUrls = lines.filter(url =>
+    isValidPlatformUrl(url, platform)
+  );
+
+  const invalidCount = lines.length - validUrls.length;
+
   if (validUrls.length === 0) {
-    alert(platform === "shopee"
-      ? "沒有找到有效的蝦皮網址，請確認網址包含 shopee 或 shp.ee。"
-      : "沒有找到有效的酷澎網址，請確認網址是 Coupang 或 coupa.ng 網域。");
+
+    alert(
+      platform === "shopee"
+        ? "沒有找到有效的蝦皮網址，請確認網址包含 shopee 或 shp.ee。"
+        : "沒有找到有效的酷澎台灣商品網址，請確認網址為 https://www.tw.coupang.com 或 https://tw.coupang.com。"
+    );
+
     return;
+
   }
 
   isConverting = true;
+
   button.disabled = true;
-  document.querySelectorAll(".platform-tab").forEach(tab => tab.disabled = true);
+
+  document.querySelectorAll(".platform-tab").forEach(tab => {
+    tab.disabled = true;
+  });
+
   resultBox.replaceChildren();
+
   const waiting = document.createElement("div");
+
   waiting.className = "placeholder-text";
   waiting.textContent = "正在連接轉換伺服器，請稍候...";
+
   resultBox.appendChild(waiting);
 
   try {
+
     const ready = await wakeBackend();
+
     if (!ready) {
+
       resultBox.replaceChildren();
+
       const error = document.createElement("div");
+
       error.className = "error-text";
-      error.textContent = "❌ 後端喚醒或連線失敗，尚未開始轉換。請稍後再試。";
+
+      error.textContent =
+        "❌ 後端喚醒或連線失敗，尚未開始轉換。請稍後再試。";
+
       resultBox.appendChild(error);
+
       return;
+
     }
 
     resultBox.replaceChildren();
+
     let successCount = 0;
     let failCount = invalidCount;
+
     if (invalidCount > 0) {
+
       const invalid = document.createElement("div");
+
       invalid.className = "result-item";
-      invalid.innerHTML = `<div class="error-text">⚠️ 有 ${invalidCount} 行不是目前所選平台的有效網址，已略過。</div>`;
+
+      const error = document.createElement("div");
+
+      error.className = "error-text";
+
+      error.textContent =
+        `⚠️ 有 ${invalidCount} 行不是目前所選平台的有效網址，已略過。`;
+
+      invalid.appendChild(error);
+
       resultBox.appendChild(invalid);
+
     }
 
     const results = [];
+
     setProgress(0, validUrls.length);
+
     for (let i = 0; i < validUrls.length; i++) {
-      button.textContent = `⏳ 正在轉換 ${i + 1}/${validUrls.length}...`;
-      setBackendStatus(`⏳ 正在轉換第 ${i + 1} / ${validUrls.length} 筆連結...`);
-      const result = await convertSingleUrl(validUrls[i], platform);
+
+      button.textContent =
+        `⏳ 正在轉換 ${i + 1}/${validUrls.length}...`;
+
+      setBackendStatus(
+        `⏳ 正在轉換第 ${i + 1} / ${validUrls.length} 筆連結...`
+      );
+
+      const result = await convertSingleUrl(
+        validUrls[i],
+        platform
+      );
+
       results.push(result);
-      if (result.success) successCount++;
-      else failCount++;
+
+      if (result.success) {
+        successCount++;
+      } else {
+        failCount++;
+      }
+
       setProgress(i + 1, validUrls.length);
+
     }
 
-    results.forEach((result, index) => addResultItem(resultBox, result, index));
+    results.forEach((result, index) => {
+      addResultItem(resultBox, result, index);
+    });
+
     const summary = document.createElement("div");
+
     summary.className = "success-summary";
+
     const total = document.createElement("span");
+
     total.textContent = `共處理 ${lines.length} 筆`;
+
     const good = document.createElement("span");
+
     good.className = "good";
     good.textContent = `成功 ${successCount} 筆`;
+
     const bad = document.createElement("span");
+
     bad.className = "bad";
     bad.textContent = `失敗／略過 ${failCount} 筆`;
+
     summary.append(total, good, bad);
+
     resultBox.appendChild(summary);
 
     if (failCount === 0) {
-      setBackendStatus("🟢 轉換完成，全部成功", "ok");
+
+      setBackendStatus(
+        "🟢 轉換完成，全部成功",
+        "ok"
+      );
+
     } else {
-      setBackendStatus("🟡 轉換已完成，部分網址失敗或格式不符");
+
+      setBackendStatus(
+        "🟡 轉換已完成，部分網址失敗或格式不符"
+      );
+
     }
+
   } catch (error) {
+
     console.error("批量轉換錯誤：", error);
+
     resultBox.replaceChildren();
+
     const message = document.createElement("div");
+
     message.className = "error-text";
-    message.textContent = "❌ 批量轉換發生未預期錯誤，請稍後重試。";
+
+    message.textContent =
+      "❌ 批量轉換發生未預期錯誤，請稍後重試。";
+
     resultBox.appendChild(message);
-    setBackendStatus("🔴 轉換過程發生錯誤", "bad");
+
+    setBackendStatus(
+      "🔴 轉換過程發生錯誤",
+      "bad"
+    );
+
   } finally {
+
     isConverting = false;
+
     button.disabled = false;
-    button.textContent = platformConfig[currentPlatform].button;
-    document.querySelectorAll(".platform-tab").forEach(tab => tab.disabled = false);
-    setTimeout(() => setProgress(0, 0), 900);
+
+    button.textContent =
+      platformConfig[currentPlatform].button;
+
+    document.querySelectorAll(".platform-tab").forEach(tab => {
+      tab.disabled = false;
+    });
+
+    setTimeout(() => {
+      setProgress(0, 0);
+    }, 900);
+
   }
+
 }
+
+// ==================================
+// 14. 清空內容
+// ==================================
 
 function clearAll() {
+
   if (isConverting) return;
+
   document.getElementById("urlInput").value = "";
+
   document.getElementById("resultBox").innerHTML =
     '<div class="placeholder-text">轉換完成的專屬推廣連結會顯示在這裡</div>';
+
+  hideCoupangHelper();
+
   setProgress(0, 0);
+
 }
 
+// ==================================
+// 15. 網站載入後檢查後端
+// ==================================
+
 window.addEventListener("load", () => {
+
   wakeBackend();
+
 });
 </script>
+
 </body>
 </html>
