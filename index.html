@@ -207,7 +207,7 @@ textarea {
   outline: none;
   background: #fcfbfa;
   color: #302b28;
-  font-family: inherit;
+  font: inherit;
   font-size: 14px;
   line-height: 1.65;
   resize: vertical;
@@ -222,81 +222,6 @@ textarea:focus {
 
 textarea::placeholder {
   color: #b5aca6;
-}
-
-/* 酷澎短網址輔助區 */
-
-.coupang-helper {
-  display: none;
-  margin-top: 13px;
-  padding: 15px;
-  border: 1px solid #dbe5fb;
-  border-radius: 13px;
-  background: #f5f8ff;
-}
-
-.coupang-helper.show {
-  display: block;
-}
-
-.coupang-helper-title {
-  color: #2857bb;
-  font-size: 14px;
-  font-weight: 800;
-  margin-bottom: 8px;
-}
-
-.coupang-helper-text {
-  color: #716b67;
-  font-size: 12px;
-  line-height: 1.8;
-  margin-bottom: 10px;
-}
-
-.coupang-short-item {
-  padding: 10px 0;
-  border-top: 1px solid #e2e9f7;
-  overflow-wrap: anywhere;
-}
-
-.coupang-short-label {
-  color: #77706b;
-  font-size: 11px;
-  margin-bottom: 5px;
-}
-
-.coupang-short-url {
-  display: block;
-  color: #2857bb;
-  font-size: 12px;
-  font-weight: 700;
-  overflow-wrap: anywhere;
-}
-
-.coupang-open-btn {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 8px 13px;
-  color: white;
-  background: #3468d4;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.coupang-open-btn:hover {
-  background: #2857bb;
-}
-
-.coupang-helper-note {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  background: #eaf0ff;
-  color: #36558e;
-  font-size: 11px;
-  line-height: 1.7;
 }
 
 .actions {
@@ -510,34 +435,13 @@ textarea::placeholder {
 }
 
 @media (max-width:520px) {
-  body {
-    padding: 68px 11px 20px;
-  }
-
-  .card {
-    padding: 22px 16px;
-    border-radius: 21px;
-  }
-
+  body { padding: 68px 11px 20px; }
+  .card { padding: 22px 16px; border-radius: 21px; }
   h1 { font-size: 22px; }
-
-  .avatar {
-    width: 78px;
-    height: 78px;
-  }
-
-  .icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .actions {
-    grid-template-columns: 1fr;
-  }
-
-  .clear-btn {
-    padding: 11px;
-  }
+  .avatar { width: 78px; height: 78px; }
+  .icon { width: 36px; height: 36px; }
+  .actions { grid-template-columns: 1fr; }
+  .clear-btn { padding: 11px; }
 }
 </style>
 </head>
@@ -547,6 +451,7 @@ textarea::placeholder {
 <div class="top-icons">
   <a class="icon fb"
      href="https://www.facebook.com/profile.php?id=61596487799596"
+     target="_blank"
      rel="noopener noreferrer"
      aria-label="Facebook">f</a>
 
@@ -603,7 +508,9 @@ textarea::placeholder {
   <section>
 
     <div class="section-head">
-      <label class="section-label" for="urlInput" id="inputLabel">
+      <label class="section-label"
+             for="urlInput"
+             id="inputLabel">
         📥 貼上蝦皮商品連結：
       </label>
 
@@ -616,29 +523,6 @@ textarea::placeholder {
 例如：
 https://tw.shp.ee/B1LMXc93
 https://shopee.tw/product/789/012"></textarea>
-
-    <!-- 酷澎短網址輔助區 -->
-
-    <div id="coupangHelper" class="coupang-helper">
-
-      <div class="coupang-helper-title">
-        🔵 酷澎短網址展開工具
-      </div>
-
-      <div class="coupang-helper-text">
-        偵測到酷澎短網址。請點擊下方的「開啟酷澎商品頁」，
-        等待商品頁載入完成後，複製瀏覽器網址列中的完整網址，
-        再回到這裡貼上並重新轉換。
-      </div>
-
-      <div id="coupangShortList"></div>
-
-      <div class="coupang-helper-note">
-        💡 注意：請複製瀏覽器網址列的完整商品網址，
-        不要只複製 coupa.ng 短網址。
-      </div>
-
-    </div>
 
     <div class="actions">
 
@@ -703,18 +587,35 @@ https://shopee.tw/product/789/012"></textarea>
 </main>
 
 <script>
+/* =========================================
+   後端設定
+========================================= */
+
 const BACKEND_URL = "https://shopee-backend-xxgk.onrender.com";
 
 let currentPlatform = "shopee";
 let isConverting = false;
 
+
+/* =========================================
+   平台設定
+========================================= */
+
 const platformConfig = {
 
   shopee: {
     endpoint: "/convert",
+
     label: "📥 貼上蝦皮商品連結：",
-    placeholder: "請將蝦皮連結貼在這裡...\n例如：\nhttps://tw.shp.ee/B1LMXc93\nhttps://shopee.tw/product/789/012",
+
+    placeholder:
+`請將蝦皮連結貼在這裡...
+例如：
+https://tw.shp.ee/B1LMXc93
+https://shopee.tw/product/789/012`,
+
     button: "🚀 立即轉換蝦皮連結",
+
     accent: "#ee4d2d",
     accent2: "#ff784f",
     soft: "rgba(238,77,45,.12)",
@@ -723,9 +624,21 @@ const platformConfig = {
 
   coupang: {
     endpoint: "/coupang/convert",
-    label: "📥 貼上酷澎商品連結：",
-    placeholder: "請將 Coupang 商品連結貼在這裡...\n例如：\nhttps://coupa.ng/crkvol\nhttps://www.tw.coupang.com/products/...\n每行貼上一個網址",
+
+    label: "📥 貼上酷澎商品連結或短網址：",
+
+    placeholder:
+`請將 Coupang 商品網址或短網址貼在這裡...
+
+支援短網址：
+https://coupa.ng/crkvol
+https://link.tw.coupang.com/...
+
+也可以貼上酷澎商品頁網址。
+每行貼上一個網址。`,
+
     button: "🔵 立即轉換酷澎連結",
+
     accent: "#3468d4",
     accent2: "#5283e8",
     soft: "rgba(52,104,212,.12)",
@@ -734,9 +647,10 @@ const platformConfig = {
 
 };
 
-// ==================================
-// 1. 後端狀態
-// ==================================
+
+/* =========================================
+   後端狀態
+========================================= */
 
 function setBackendStatus(message, state = "") {
 
@@ -752,9 +666,10 @@ function setBackendStatus(message, state = "") {
 
 }
 
-// ==================================
-// 2. 進度條
-// ==================================
+
+/* =========================================
+   進度條
+========================================= */
 
 function setProgress(done, total) {
 
@@ -769,132 +684,18 @@ function setProgress(done, total) {
 
 }
 
-// ==================================
-// 3. 酷澎短網址判斷
-// ==================================
 
-function isCoupangShortUrl(rawUrl) {
-
-  try {
-
-    const url = new URL(rawUrl);
-
-    return (
-      url.protocol === "https:" &&
-      url.hostname.toLowerCase() === "coupa.ng"
-    );
-
-  } catch {
-    return false;
-  }
-
-}
-
-// ==================================
-// 4. 酷澎商品網址判斷
-// ==================================
-
-function isValidCoupangProductUrl(rawUrl) {
-
-  try {
-
-    const url = new URL(rawUrl);
-
-    const allowedDomains = [
-      "www.tw.coupang.com",
-      "tw.coupang.com"
-    ];
-
-    return (
-      url.protocol === "https:" &&
-      allowedDomains.includes(url.hostname.toLowerCase()) &&
-      !url.username &&
-      !url.password
-    );
-
-  } catch {
-    return false;
-  }
-
-}
-
-// ==================================
-// 5. 顯示酷澎短網址展開工具
-// ==================================
-
-function prepareCoupangShortLinks(shortUrls) {
-
-  const helper = document.getElementById("coupangHelper");
-  const list = document.getElementById("coupangShortList");
-
-  list.replaceChildren();
-
-  shortUrls.forEach((url, index) => {
-
-    const item = document.createElement("div");
-    item.className = "coupang-short-item";
-
-    const label = document.createElement("div");
-    label.className = "coupang-short-label";
-    label.textContent = `第 ${index + 1} 個短網址`;
-
-    const link = document.createElement("a");
-    link.className = "coupang-short-url";
-    link.href = url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.textContent = url;
-
-    const open = document.createElement("a");
-    open.className = "coupang-open-btn";
-    open.href = url;
-    open.target = "_blank";
-    open.rel = "noopener noreferrer";
-    open.textContent = "↗ 開啟酷澎商品頁";
-
-    item.append(
-      label,
-      link,
-      document.createElement("br"),
-      open
-    );
-
-    list.appendChild(item);
-
-  });
-
-  helper.classList.add("show");
-
-  helper.scrollIntoView({
-    behavior: "smooth",
-    block: "nearest"
-  });
-
-}
-
-// ==================================
-// 6. 隱藏酷澎輔助區
-// ==================================
-
-function hideCoupangHelper() {
-
-  document.getElementById("coupangHelper").classList.remove("show");
-
-  document.getElementById("coupangShortList").replaceChildren();
-
-}
-
-// ==================================
-// 7. 切換平台
-// ==================================
+/* =========================================
+   平台切換
+========================================= */
 
 function switchPlatform(platform) {
 
-  if (isConverting || !platformConfig[platform]) return;
+  if (isConverting || !platformConfig[platform]) {
+    return;
+  }
 
   currentPlatform = platform;
-
-  hideCoupangHelper();
 
   const config = platformConfig[platform];
 
@@ -907,10 +708,25 @@ function switchPlatform(platform) {
 
   });
 
-  document.documentElement.style.setProperty("--accent", config.accent);
-  document.documentElement.style.setProperty("--accent2", config.accent2);
-  document.documentElement.style.setProperty("--accent-soft", config.soft);
-  document.documentElement.style.setProperty("--accent-shadow", config.shadow);
+  document.documentElement.style.setProperty(
+    "--accent",
+    config.accent
+  );
+
+  document.documentElement.style.setProperty(
+    "--accent2",
+    config.accent2
+  );
+
+  document.documentElement.style.setProperty(
+    "--accent-soft",
+    config.soft
+  );
+
+  document.documentElement.style.setProperty(
+    "--accent-shadow",
+    config.shadow
+  );
 
   document.getElementById("inputLabel").textContent = config.label;
 
@@ -925,13 +741,16 @@ function switchPlatform(platform) {
 
 }
 
-// ==================================
-// 8. 喚醒後端
-// ==================================
+
+/* =========================================
+   喚醒 Render 後端
+========================================= */
 
 async function wakeBackend() {
 
-  setBackendStatus("⏳ 正在連接轉換伺服器，首次啟動可能需要等待...");
+  setBackendStatus(
+    "⏳ 正在連接轉換伺服器，首次啟動可能需要等待..."
+  );
 
   const controller = new AbortController();
 
@@ -958,7 +777,10 @@ async function wakeBackend() {
       throw new Error("BACKEND_NOT_READY");
     }
 
-    setBackendStatus("🟢 伺服器已連線，可以開始轉換", "ok");
+    setBackendStatus(
+      "🟢 伺服器已連線，可以開始轉換",
+      "ok"
+    );
 
     return true;
 
@@ -982,9 +804,10 @@ async function wakeBackend() {
 
 }
 
-// ==================================
-// 9. 網址有效性檢查
-// ==================================
+
+/* =========================================
+   網址格式檢查
+========================================= */
 
 function isValidPlatformUrl(rawUrl, platform) {
 
@@ -992,7 +815,12 @@ function isValidPlatformUrl(rawUrl, platform) {
 
     const url = new URL(rawUrl);
 
-    if (!["http:", "https:"].includes(url.protocol)) {
+    // 只接受 HTTPS，並拒絕帳密、非標準連接埠
+    if (url.protocol !== "https:") {
+      return false;
+    }
+
+    if (url.username || url.password || url.port) {
       return false;
     }
 
@@ -1000,17 +828,38 @@ function isValidPlatformUrl(rawUrl, platform) {
 
     if (platform === "shopee") {
 
-      // 蝦皮保留原本判斷方式
-      return (
-        host.includes("shopee") ||
-        host === "shp.ee" ||
-        host.endsWith(".shp.ee")
-      );
+      const allowedShopeeHosts = [
+        "shopee.tw",
+        "www.shopee.tw",
+        "shopee.com.tw",
+        "www.shopee.com.tw",
+        "shp.ee",
+        "tw.shp.ee"
+      ];
+
+      return allowedShopeeHosts.includes(host) ||
+        host.endsWith(".shopee.tw") ||
+        host.endsWith(".shopee.com.tw") ||
+        host.endsWith(".shp.ee");
 
     }
 
-    // 酷澎只接受已展開的台灣商品網址
-    return isValidCoupangProductUrl(rawUrl);
+    if (platform === "coupang") {
+
+      const allowedCoupangHosts = [
+        "coupa.ng",
+        "www.coupa.ng",
+        "link.tw.coupang.com",
+        "tw.coupang.com",
+        "www.tw.coupang.com",
+        "coupang.onelink.me"
+      ];
+
+      return allowedCoupangHosts.includes(host);
+
+    }
+
+    return false;
 
   } catch {
 
@@ -1020,83 +869,127 @@ function isValidPlatformUrl(rawUrl, platform) {
 
 }
 
-// ==================================
-// 10. 錯誤訊息
-// ==================================
+
+/* =========================================
+   錯誤訊息翻譯
+========================================= */
 
 function friendlyError(code, fallback, platform) {
 
   const common = {
 
-    INVALID_URL: "商品網址格式不正確，請檢查網址。",
+    INVALID_URL:
+      "商品網址格式不正確，請檢查網址。",
 
-    INVALID_COUPANG_PRODUCT_URL:
-      "請先開啟酷澎短網址，並貼上已展開的台灣商品網址。",
+    BACKEND_ERROR:
+      "伺服器發生錯誤，請稍後再試。",
 
-    BACKEND_ERROR: "伺服器發生錯誤，請稍後再試。",
+    MISSING_CONFIG:
+      "伺服器設定不完整，請聯絡管理者。",
 
-    MISSING_CONFIG: "伺服器設定不完整，請聯絡管理者。",
+    INVALID_JSON:
+      "送出的資料格式錯誤。",
 
-    INVALID_JSON: "送出的資料格式錯誤。",
+    NOT_FOUND:
+      "找不到指定的 API 路徑，請確認後端已部署對應功能。",
 
-    NOT_FOUND: "找不到指定的 API 路徑，請確認後端已部署對應功能。",
+    INVALID_RESPONSE:
+      "伺服器回傳資料無法讀取。",
 
-    INVALID_RESPONSE: "伺服器回傳資料無法讀取。",
+    EMPTY_RESULT:
+      "伺服器沒有回傳轉換後的連結。",
 
-    EMPTY_RESULT: "伺服器沒有回傳轉換後的連結。",
-
-    NETWORK_ERROR: "無法連接轉換伺服器，請檢查網路或稍後重試。"
+    NETWORK_ERROR:
+      "無法連接轉換伺服器，請檢查網路或稍後重試。"
 
   };
+
 
   const shopee = {
 
-    SHOPEE_TIMEOUT: "蝦皮 API 回應逾時，請稍後再試。",
+    SHOPEE_TIMEOUT:
+      "蝦皮 API 回應逾時，請稍後再試。",
 
-    SHOPEE_CONNECTION_ERROR: "目前無法連接蝦皮 API。",
+    SHOPEE_CONNECTION_ERROR:
+      "目前無法連接蝦皮 API。",
 
-    SHOPEE_AUTH_ERROR: "蝦皮 API 認證異常，請聯絡管理者。",
+    SHOPEE_AUTH_ERROR:
+      "蝦皮 API 認證異常，請聯絡管理者。",
 
-    SHOPEE_API_ERROR: "蝦皮 API 回應異常，請稍後再試。",
+    SHOPEE_API_ERROR:
+      "蝦皮 API 回應異常，請稍後再試。",
 
-    SHOPEE_INVALID_RESPONSE: "蝦皮 API 回傳資料格式異常。",
+    SHOPEE_INVALID_RESPONSE:
+      "蝦皮 API 回傳資料格式異常。",
 
-    SHOPEE_EMPTY_RESULT: "蝦皮 API 沒有產生短連結。"
+    SHOPEE_EMPTY_RESULT:
+      "蝦皮 API 沒有產生短連結。"
 
   };
+
 
   const coupang = {
 
-    COUPANG_TIMEOUT: "酷澎 API 回應逾時，請稍後再試。",
+    COUPANG_TIMEOUT:
+      "酷澎 API 回應逾時，請稍後再試。",
 
-    COUPANG_CONNECTION_ERROR: "目前無法連接酷澎 API。",
+    COUPANG_CONNECTION_ERROR:
+      "目前無法連接酷澎 API。",
 
-    COUPANG_AUTH_ERROR: "酷澎 API 認證異常，請檢查後端金鑰設定。",
+    COUPANG_AUTH_ERROR:
+      "酷澎 API 認證異常，請檢查後端金鑰設定。",
 
-    COUPANG_API_ERROR: "酷澎 API 回應異常，請稍後再試。",
+    COUPANG_API_ERROR:
+      "酷澎 API 回應異常，請稍後再試。",
 
-    COUPANG_INVALID_RESPONSE: "酷澎 API 回傳資料格式異常。",
+    COUPANG_INVALID_RESPONSE:
+      "酷澎 API 回傳資料格式異常。",
 
-    COUPANG_EMPTY_RESULT: "酷澎 API 沒有產生推廣連結。",
+    COUPANG_EMPTY_RESULT:
+      "酷澎 API 沒有產生推廣連結。",
 
-    COUPANG_CONFIG_MISSING: "酷澎 API 憑證尚未設定。",
+    INVALID_COUPANG_PRODUCT_URL:
+      "請貼上有效的酷澎台灣商品網址，或支援的酷澎短網址。",
 
-    COUPANG_BACKEND_ERROR: "酷澎後端發生內部錯誤。"
+    COUPANG_SHORT_RESOLVE_BLOCKED:
+      "酷澎短網址解析遭到網站阻擋，暫時無法自動取得商品頁。",
+
+    COUPANG_RESOLVE_TIMEOUT:
+      "酷澎短網址解析逾時，請稍後再試。",
+
+    COUPANG_RESOLVE_NO_PRODUCT:
+      "無法從酷澎短網址取得商品頁，請確認短網址是否有效。",
+
+    COUPANG_INVALID_REDIRECT:
+      "酷澎短網址跳轉到不支援的網址，為安全起見已停止轉換。",
+
+    COUPANG_REDIRECT_LOOP:
+      "酷澎短網址發生重複跳轉，無法完成解析。",
+
+    COUPANG_RESOLVE_CONNECTION_ERROR:
+      "目前無法連接酷澎短網址解析服務。",
+
+    COUPANG_RESOLVE_HTTP_ERROR:
+      "酷澎短網址頁面回應異常，暫時無法解析。"
 
   };
+
 
   const messages = {
     ...common,
     ...(platform === "shopee" ? shopee : coupang)
   };
 
-  return messages[code] || fallback || "發生未知錯誤，請稍後再試。";
+  return messages[code] ||
+    fallback ||
+    "發生未知錯誤，請稍後再試。";
 
 }
 
-// ==================================
-// 11. 單筆轉換
-// ==================================
+
+/* =========================================
+   單筆轉換
+========================================= */
 
 async function convertSingleUrl(url, platform) {
 
@@ -1132,6 +1025,7 @@ async function convertSingleUrl(url, platform) {
 
     }
 
+
     if (
       !response.ok ||
       data.success === false ||
@@ -1144,18 +1038,25 @@ async function convertSingleUrl(url, platform) {
         "BACKEND_ERROR";
 
       return {
+
         success: false,
+
         code,
+
         message: friendlyError(
           code,
           data.error || data.message,
           platform
         ),
+
         requestId: data.request_id,
+
         status: response.status
+
       };
 
     }
+
 
     const link =
       data.affiliate_url ||
@@ -1166,79 +1067,119 @@ async function convertSingleUrl(url, platform) {
     if (!link) {
 
       return {
+
         success: false,
+
         code: "EMPTY_RESULT",
-        message: friendlyError("EMPTY_RESULT", "", platform),
+
+        message: friendlyError(
+          "EMPTY_RESULT",
+          "",
+          platform
+        ),
+
         requestId: data.request_id
+
       };
 
     }
+
 
     return {
       success: true,
       link
     };
 
+
   } catch (error) {
 
     console.error("單筆轉換連線錯誤：", error);
 
     return {
+
       success: false,
+
       code: "NETWORK_ERROR",
-      message: friendlyError("NETWORK_ERROR", "", platform)
+
+      message: friendlyError(
+        "NETWORK_ERROR",
+        "",
+        platform
+      )
+
     };
 
   }
 
 }
 
-// ==================================
-// 12. 顯示轉換結果
-// ==================================
+
+/* =========================================
+   顯示轉換結果
+========================================= */
 
 function addResultItem(resultBox, result, index) {
 
   const item = document.createElement("div");
+
   item.className = "result-item";
 
+
   const top = document.createElement("div");
+
   top.className = "result-top";
 
+
   const number = document.createElement("span");
+
   number.className = "result-number";
+
   number.textContent = `第 ${index + 1} 筆`;
 
-  const state = document.createElement("span");
-  state.className = "result-state " + (
-    result.success ? "success" : "fail"
-  );
 
-  state.textContent = result.success
-    ? "✓ 轉換成功"
-    : "✕ 轉換失敗";
+  const state = document.createElement("span");
+
+  state.className =
+    "result-state " +
+    (result.success ? "success" : "fail");
+
+  state.textContent =
+    result.success ? "✓ 轉換成功" : "✕ 轉換失敗";
+
 
   top.append(number, state);
+
   item.appendChild(top);
+
 
   if (result.success) {
 
     const link = document.createElement("a");
 
     link.className = "result-link";
+
     link.href = result.link;
+
     link.target = "_blank";
+
     link.rel = "noopener noreferrer";
+
     link.textContent = result.link;
 
+
     const actions = document.createElement("div");
+
     actions.className = "result-actions";
+
 
     const copy = document.createElement("button");
 
     copy.className = "copy-btn";
+
     copy.type = "button";
+
     copy.textContent = "📋 複製推廣連結";
+
 
     copy.addEventListener("click", async () => {
 
@@ -1248,9 +1189,10 @@ function addResultItem(resultBox, result, index) {
 
         copy.textContent = "✓ 已複製";
 
-        setTimeout(() => {
-          copy.textContent = "📋 複製推廣連結";
-        }, 1600);
+        setTimeout(
+          () => copy.textContent = "📋 複製推廣連結",
+          1600
+        );
 
       } catch {
 
@@ -1263,6 +1205,7 @@ function addResultItem(resultBox, result, index) {
 
     });
 
+
     actions.appendChild(copy);
 
     item.append(link, actions);
@@ -1272,9 +1215,11 @@ function addResultItem(resultBox, result, index) {
     const error = document.createElement("div");
 
     error.className = "error-text";
+
     error.textContent = "❌ " + result.message;
 
     item.appendChild(error);
+
 
     if (
       result.code ||
@@ -1287,9 +1232,18 @@ function addResultItem(resultBox, result, index) {
       detail.className = "error-detail";
 
       detail.textContent =
-        (result.code ? "錯誤代碼：" + result.code : "") +
-        (result.status ? "｜HTTP：" + result.status : "") +
-        (result.requestId ? "｜診斷編號：" + result.requestId : "");
+
+        (result.code
+          ? "錯誤代碼：" + result.code
+          : "") +
+
+        (result.status
+          ? "｜HTTP：" + result.status
+          : "") +
+
+        (result.requestId
+          ? "｜診斷編號：" + result.requestId
+          : "");
 
       item.appendChild(detail);
 
@@ -1297,30 +1251,47 @@ function addResultItem(resultBox, result, index) {
 
   }
 
+
   resultBox.appendChild(item);
 
 }
 
-// ==================================
-// 13. 批量轉換
-// ==================================
+
+/* =========================================
+   批次轉換主程式
+========================================= */
 
 async function convert() {
 
   if (isConverting) return;
 
-  const input = document.getElementById("urlInput").value;
 
-  const button = document.getElementById("convertBtn");
+  const input =
+    document.getElementById("urlInput").value;
 
-  const resultBox = document.getElementById("resultBox");
+  const button =
+    document.getElementById("convertBtn");
+
+  const resultBox =
+    document.getElementById("resultBox");
 
   const platform = currentPlatform;
+
 
   const lines = input
     .split(/\r?\n/)
     .map(line => line.trim())
     .filter(Boolean);
+
+
+  const validUrls = lines.filter(
+    url => isValidPlatformUrl(url, platform)
+  );
+
+
+  const invalidCount =
+    lines.length - validUrls.length;
+
 
   if (lines.length === 0) {
 
@@ -1330,76 +1301,45 @@ async function convert() {
 
   }
 
-  // 酷澎短網址先交給前台展開工具處理
-  if (platform === "coupang") {
-
-    const shortUrls = lines.filter(isCoupangShortUrl);
-
-    if (shortUrls.length > 0) {
-
-      prepareCoupangShortLinks(shortUrls);
-
-      setBackendStatus(
-        "🟡 偵測到酷澎短網址，請先展開商品網址"
-      );
-
-      resultBox.replaceChildren();
-
-      const notice = document.createElement("div");
-
-      notice.className = "placeholder-text";
-
-      notice.textContent =
-        "請先開啟上方酷澎商品頁，複製完整商品網址後再進行轉換。";
-
-      resultBox.appendChild(notice);
-
-      return;
-
-    }
-
-    hideCoupangHelper();
-
-  }
-
-  const validUrls = lines.filter(url =>
-    isValidPlatformUrl(url, platform)
-  );
-
-  const invalidCount = lines.length - validUrls.length;
 
   if (validUrls.length === 0) {
 
     alert(
       platform === "shopee"
         ? "沒有找到有效的蝦皮網址，請確認網址包含 shopee 或 shp.ee。"
-        : "沒有找到有效的酷澎台灣商品網址，請確認網址為 https://www.tw.coupang.com 或 https://tw.coupang.com。"
+        : "沒有找到有效的酷澎網址，請確認是 coupa.ng、link.tw.coupang.com 或酷澎商品頁網址。"
     );
 
     return;
 
   }
 
+
   isConverting = true;
 
   button.disabled = true;
 
-  document.querySelectorAll(".platform-tab").forEach(tab => {
-    tab.disabled = true;
-  });
+  document.querySelectorAll(".platform-tab").forEach(
+    tab => tab.disabled = true
+  );
+
 
   resultBox.replaceChildren();
+
 
   const waiting = document.createElement("div");
 
   waiting.className = "placeholder-text";
+
   waiting.textContent = "正在連接轉換伺服器，請稍候...";
 
   resultBox.appendChild(waiting);
 
+
   try {
 
     const ready = await wakeBackend();
+
 
     if (!ready) {
 
@@ -1418,10 +1358,14 @@ async function convert() {
 
     }
 
+
     resultBox.replaceChildren();
 
+
     let successCount = 0;
+
     let failCount = invalidCount;
+
 
     if (invalidCount > 0) {
 
@@ -1429,22 +1373,24 @@ async function convert() {
 
       invalid.className = "result-item";
 
-      const error = document.createElement("div");
+      const invalidMessage = document.createElement("div");
 
-      error.className = "error-text";
+      invalidMessage.className = "error-text";
 
-      error.textContent =
+      invalidMessage.textContent =
         `⚠️ 有 ${invalidCount} 行不是目前所選平台的有效網址，已略過。`;
 
-      invalid.appendChild(error);
+      invalid.appendChild(invalidMessage);
 
       resultBox.appendChild(invalid);
 
     }
 
+
     const results = [];
 
     setProgress(0, validUrls.length);
+
 
     for (let i = 0; i < validUrls.length; i++) {
 
@@ -1455,12 +1401,15 @@ async function convert() {
         `⏳ 正在轉換第 ${i + 1} / ${validUrls.length} 筆連結...`
       );
 
+
       const result = await convertSingleUrl(
         validUrls[i],
         platform
       );
 
+
       results.push(result);
+
 
       if (result.success) {
         successCount++;
@@ -1468,35 +1417,50 @@ async function convert() {
         failCount++;
       }
 
-      setProgress(i + 1, validUrls.length);
+
+      setProgress(
+        i + 1,
+        validUrls.length
+      );
 
     }
 
-    results.forEach((result, index) => {
-      addResultItem(resultBox, result, index);
-    });
+
+    results.forEach(
+      (result, index) => {
+        addResultItem(resultBox, result, index);
+      }
+    );
+
 
     const summary = document.createElement("div");
 
     summary.className = "success-summary";
 
+
     const total = document.createElement("span");
 
     total.textContent = `共處理 ${lines.length} 筆`;
 
+
     const good = document.createElement("span");
 
     good.className = "good";
+
     good.textContent = `成功 ${successCount} 筆`;
+
 
     const bad = document.createElement("span");
 
     bad.className = "bad";
+
     bad.textContent = `失敗／略過 ${failCount} 筆`;
+
 
     summary.append(total, good, bad);
 
     resultBox.appendChild(summary);
+
 
     if (failCount === 0) {
 
@@ -1513,11 +1477,13 @@ async function convert() {
 
     }
 
+
   } catch (error) {
 
     console.error("批量轉換錯誤：", error);
 
     resultBox.replaceChildren();
+
 
     const message = document.createElement("div");
 
@@ -1527,6 +1493,7 @@ async function convert() {
       "❌ 批量轉換發生未預期錯誤，請稍後重試。";
 
     resultBox.appendChild(message);
+
 
     setBackendStatus(
       "🔴 轉換過程發生錯誤",
@@ -1542,21 +1509,23 @@ async function convert() {
     button.textContent =
       platformConfig[currentPlatform].button;
 
-    document.querySelectorAll(".platform-tab").forEach(tab => {
-      tab.disabled = false;
-    });
+    document.querySelectorAll(".platform-tab").forEach(
+      tab => tab.disabled = false
+    );
 
-    setTimeout(() => {
-      setProgress(0, 0);
-    }, 900);
+    setTimeout(
+      () => setProgress(0, 0),
+      900
+    );
 
   }
 
 }
 
-// ==================================
-// 14. 清空內容
-// ==================================
+
+/* =========================================
+   清空內容
+========================================= */
 
 function clearAll() {
 
@@ -1567,21 +1536,21 @@ function clearAll() {
   document.getElementById("resultBox").innerHTML =
     '<div class="placeholder-text">轉換完成的專屬推廣連結會顯示在這裡</div>';
 
-  hideCoupangHelper();
-
   setProgress(0, 0);
 
 }
 
-// ==================================
-// 15. 網站載入後檢查後端
-// ==================================
+
+/* =========================================
+   網頁載入後檢查後端
+========================================= */
 
 window.addEventListener("load", () => {
 
   wakeBackend();
 
 });
+
 </script>
 
 </body>
