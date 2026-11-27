@@ -532,7 +532,7 @@ function createManualCoupangCard(shortUrl, index, resultBox) {
 
   const steps = document.createElement("div");
   steps.className = "manual-steps";
-  steps.textContent = "中繼步驟 1／3：點擊下方按鈕，在新分頁開啟 coupa.ng。\n中繼步驟 2／3：等酷澎商品頁完整載入，複製瀏覽器網址列的台灣商品頁網址。\n中繼步驟 3／3：回到這張中繼卡片貼上網址，按下轉換；系統會使用你的 Coupang Partners API 產生專屬分潤連結。";
+  steps.textContent = "中繼步驟 1／3：點擊下方按鈕，在新分頁開啟 coupa.ng。\n中繼步驟 2／3：等酷澎商品頁完整載入，複製瀏覽器網址列的台灣商品頁網址。\n中繼步驟 3／3：回到這張中繼卡片貼上網址，按下轉換；系統會使用你的 Coupang Partners API 產生專屬連結。";
 
   const openLink = document.createElement("a");
   openLink.className = "manual-open";
@@ -551,7 +551,7 @@ function createManualCoupangCard(shortUrl, index, resultBox) {
   const convertButton = document.createElement("button");
   convertButton.className = "manual-convert";
   convertButton.type = "button";
-  convertButton.textContent = "③ 確認商品網址並產生我的分潤連結";
+  convertButton.textContent = "③ 確認商品網址並產生連結";
 
   const status = document.createElement("div");
   status.className = "manual-status";
@@ -571,7 +571,7 @@ function createManualCoupangCard(shortUrl, index, resultBox) {
     }
 
     convertButton.disabled = true;
-    convertButton.textContent = "⏳ 正在產生你的分潤連結...";
+    convertButton.textContent = "⏳ 正在產生連結...";
     status.textContent = "正在將商品網址送到轉換伺服器...";
     try {
       const ready = await wakeBackend();
@@ -585,7 +585,7 @@ function createManualCoupangCard(shortUrl, index, resultBox) {
         return;
       }
 
-      status.textContent = "✓ 中繼完成！已成功產生你的專屬酷澎分潤連結：";
+      status.textContent = "✓ 中繼完成！已成功產生你的專屬酷澎連結：";
       const resultLink = document.createElement("a");
       resultLink.className = "result-link";
       resultLink.href = result.link;
@@ -618,7 +618,7 @@ function createManualCoupangCard(shortUrl, index, resultBox) {
       status.textContent = "❌ " + (error.message || "轉換失敗，請稍後重試。");
     } finally {
       convertButton.disabled = false;
-      convertButton.textContent = "③ 重新產生分潤連結";
+      convertButton.textContent = "③ 重新產生連結";
     }
   });
 
