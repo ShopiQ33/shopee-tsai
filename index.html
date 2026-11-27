@@ -269,7 +269,7 @@ const platformConfig = {
   coupang: {
     endpoint: "/coupang/convert",
     label: "📥 貼上酷澎商品連結：",
-    placeholder: "請貼上酷澎網址（每行一個）...\nre2 短網址：自動轉換\ncoupa.ng：使用免費中繼流程，開啟商品頁後貼回網址",
+    placeholder: "請貼上酷澎網址（每行一個）...\nre2 短網址：自動轉換\ncoupa.ng：先嘗試自動解析，失敗時才提供免費中繼流程",
     button: "🔵 立即轉換酷澎連結",
     accent: "#3468d4",
     accent2: "#5283e8",
@@ -636,8 +636,10 @@ async function convert() {
   const lines = input.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
   const validUrls = lines.filter(url => isValidPlatformUrl(url, platform));
   const invalidCount = lines.length - validUrls.length;
-  const manualUrls = platform === "coupang" ? validUrls.filter(isCoupaNgUrl) : [];
-  const autoUrls = validUrls.filter(url => !manualUrls.includes(url));
+  // 所有有效網址（包含 coupa.ng）都先交給後端嘗試自動解析。
+  // 只有 coupa.ng 自動解析失敗時，才退回免費中繼卡片。
+  const autoUrls = validUrls;
+  let manualCount = 0;
 
   if (lines.length === 0) {
     alert("請先貼上商品網址，每行一個。");
@@ -684,18 +686,31 @@ async function convert() {
       resultBox.appendChild(invalid);
     }
 
-    // coupa.ng 由使用者在瀏覽器中開啟並複製最終商品頁，再交給後端轉換。
-    manualUrls.forEach((url, index) => createManualCoupangCard(url, index, resultBox));
-
     const results = [];
     setProgress(0, autoUrls.length);
     for (let i = 0; i < autoUrls.length; i++) {
+      const sourceUrl = autoUrls[i];
       button.textContent = `⏳ 正在自動轉換 ${i + 1}/${autoUrls.length}...`;
-      setBackendStatus(`⏳ 正在自動轉換第 ${i + 1} / ${autoUrls.length} 筆連結...`);
-      const result = await convertSingleUrl(autoUrls[i], platform);
-      results.push(result);
-      if (result.success) successCount++;
-      else failCount++;
+      setBackendStatus(`⏳ 正在自動解析並轉換第 ${i + 1} / ${autoUrls.length} 筆連結...`);
+
+      // 不再於前端預先排除 coupa.ng；每一筆都先呼叫後端 /coupang/convert。
+      const result = await convertSingleUrl(sourceUrl, platform);
+      if (result.success) {
+        successCount++;
+        results.push(result);
+      } else if (platform === "coupang" && isCoupaNgUrl(sourceUrl)) {
+        // 自動解析失敗才顯示免費中繼流程，保留原短網址供使用者手動開啟。
+        manualCount++;
+        createManualCoupangCard(sourceUrl, i, resultBox);
+        console.warn("coupa.ng 自動解析失敗，改用免費中繼流程：", {
+          code: result.code,
+          status: result.status,
+          requestId: result.requestId
+        });
+      } else {
+        failCount++;
+        results.push(result);
+      }
       setProgress(i + 1, autoUrls.length);
     }
 
@@ -709,17 +724,17 @@ async function convert() {
     good.className = "good";
     good.textContent = `自動成功 ${successCount} 筆`;
     const pending = document.createElement("span");
-    pending.textContent = `待手動完成 ${manualUrls.length} 筆`;
+    pending.textContent = `待手動完成 ${manualCount} 筆`;
     const bad = document.createElement("span");
     bad.className = "bad";
     bad.textContent = `失敗／略過 ${failCount} 筆`;
     summary.append(total, good, pending, bad);
     resultBox.appendChild(summary);
 
-    if (failCount === 0 && manualUrls.length === 0) {
+    if (failCount === 0 && manualCount === 0) {
       setBackendStatus("🟢 轉換完成，全部成功", "ok");
-    } else if (manualUrls.length > 0) {
-      setBackendStatus("🟡 coupa.ng 請依照卡片步驟開啟商品頁並貼回網址");
+    } else if (manualCount > 0) {
+      setBackendStatus("🟡 部分 coupa.ng 自動解析未成功，請使用免費中繼卡片完成");
     } else {
       setBackendStatus("🟡 轉換已完成，部分網址失敗或格式不符");
     }
